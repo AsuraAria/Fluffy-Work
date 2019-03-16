@@ -57,7 +57,7 @@ H = 720
 
 # Var Fct
 
-menu = 0 #on n'est pas dans un menus
+menu = 1 #on est dans un menus
 
 # Var Map
 
@@ -134,10 +134,10 @@ while continuer:
         finalDir = 3
         sprite = 0
     
-    #if (menu == 0):
-    frame.blit(fond, (0,0))
-    frame.blit(maps, mapsPos)
-    frame.blit(player[int(sprite/(spriteCount/2))][finalDir], (W/2,H/2))
+    if (menu == 0):
+        frame.blit(fond, (0,0))
+        frame.blit(maps, mapsPos)
+        frame.blit(player[int(sprite/(spriteCount/2))][finalDir], (W/2,H/2))
     
     pygame.display.flip()
     pygame.time.delay(10)
