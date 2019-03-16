@@ -32,6 +32,10 @@ maps = pygame.image.load("map/map2.png").convert()
 maps = pygame.transform.scale(maps,(3000,3000))
 mapsPos = maps.get_rect()
 
+
+fond_menu_principal = pygame.image.load("textures_menus/fond_menu_principal.png").convert()
+fond_menu_principal = pygame.transform.scale(fond_menu_principal,(1280, 720))
+
 #Chargement et collage du personnage
 player = [[],[]]
 for i in range(4):
@@ -138,6 +142,11 @@ while continuer:
         frame.blit(fond, (0,0))
         frame.blit(maps, mapsPos)
         frame.blit(player[int(sprite/(spriteCount/2))][finalDir], (W/2,H/2))
+    
+    if menu ==1:#afficher le menu principal
+        frame.blit(fond, (0,0))
+        frame.blit(fond_menu_principal,(0,0))
+        
     
     pygame.display.flip()
     pygame.time.delay(10)
