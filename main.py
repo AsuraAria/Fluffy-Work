@@ -62,7 +62,7 @@ H = frameSize[1]
 
 # Var Fct
 
-menu = 1 #on est pas dans un menus
+menu = 0 #on est pas dans un menus
 
 # Var Map
 
@@ -88,14 +88,25 @@ def isColliding(side):
 
     wallDetected = False
 
-    upL = (int(W/2-mapsPos[0]-10),int(H/2-mapsPos[1]-10))
-    upR = (int(W/2-mapsPos[0]+70+10), int(H/2-mapsPos[1]-10))
-    doL = (int(W/2-mapsPos[0]-10), int(H/2-mapsPos[1]+70+10))
-    doR = (int(W/2-mapsPos[0]+70+10), int(H/2-mapsPos[1]+70+10))
+    upL = (int(W/2-mapsPos[0]),int(H/2-mapsPos[1]))
+    upR = (int(W/2-mapsPos[0]+70), int(H/2-mapsPos[1]))
+    doL = (int(W/2-mapsPos[0]), int(H/2-mapsPos[1]+70))
+    doR = (int(W/2-mapsPos[0]+70), int(H/2-mapsPos[1]+70))
 
-    print(pygame.Color(pxarray[doR[0]][doR[1]]))
-
-
+    #print(pygame.Color(pxarray[doR[0]][doR[1]]))
+    
+    if (side == 0):
+        if (pygame.Color(pxarray[doL[0]-5][doL[1]]) == (0, 248, 177, 33) or pygame.Color(pxarray[upL[0]-5][upL[1]]) == (0, 248, 177, 33)):
+            return True
+    if (side == 1):
+        if (pygame.Color(pxarray[upL[0]][upL[1]-5]) == (0, 248, 177, 33) or pygame.Color(pxarray[upR[0]][upR[1]-5]) == (0, 248, 177, 33)):
+            return True;
+    if (side == 2):
+        if (pygame.Color(pxarray[upR[0]+5][upR[1]]) == (0, 248, 177, 33) or pygame.Color(pxarray[doR[0]+5][doR[1]]) == (0, 248, 177, 33)):
+            return True;
+    if (side == 3):
+        if (pygame.Color(pxarray[doL[0]][doL[1]+5]) == (0, 248, 177, 33) or pygame.Color(pxarray[doR[0]][doR[1]+5]) == (0, 248, 177, 33)):
+            return True;
 
     return wallDetected
 
@@ -144,34 +155,34 @@ while continuer:
             elif (k == 115):
                 direction[3] = 0;
 
-
-    if (direction[0]==1 or direction[1]==1 or direction[2]==1 or direction[3]==1):
-        sprite = (sprite+1)%spriteCount
-        if (direction[0] == 1 and not isColliding(0)):
-            finalDir = 0
-            mapsPos = mapsPos.move(-speed, 0);
-        if (direction[1] == 1 and not isColliding(1)):
-            finalDir = 1
-            mapsPos = mapsPos.move(0, -speed);
-        if (direction[2] == 1 and not isColliding(2)):
-            finalDir = 2
-            mapsPos = mapsPos.move(speed, 0);
-        if (direction[3] == 1 and not isColliding(3)):
+    if (menu == 0):
+        if (direction[0]==1 or direction[1]==1 or direction[2]==1 or direction[3]==1):
+            sprite = (sprite+1)%spriteCount
+            if (direction[0] == 1 and not isColliding(0)):
+                finalDir = 0
+                mapsPos = mapsPos.move(-speed, 0);
+            if (direction[1] == 1 and not isColliding(1)):
+                finalDir = 1
+                mapsPos = mapsPos.move(0, -speed);
+            if (direction[2] == 1 and not isColliding(2)):
+                finalDir = 2
+                mapsPos = mapsPos.move(speed, 0);
+            if (direction[3] == 1 and not isColliding(3)):
+                finalDir = 3
+                mapsPos = mapsPos.move(0, speed);
+        else:
             finalDir = 3
-            mapsPos = mapsPos.move(0, speed);
-    else:
-        finalDir = 3
-        sprite = 0
-
-    #if (menu == 0):
-    frame.blit(fond, (0,0))
-    frame.blit(maps, mapsPos)
-    if (direction[1] == 1):
-        frame.blit(player[int(sprite/(spriteCount/2))][1], (W/2,H/2))
-    elif (direction[3] == 1):
-        frame.blit(player[int(sprite/(spriteCount/2))][3], (W/2,H/2))
-    else:
-        frame.blit(player[int(sprite/(spriteCount/2))][finalDir], (W/2,H/2))
+            sprite = 0
+    
+        #if (menu == 0):
+        frame.blit(fond, (0,0))
+        frame.blit(maps, mapsPos)
+        if (direction[1] == 1):
+            frame.blit(player[int(sprite/(spriteCount/2))][1], (W/2,H/2))
+        elif (direction[3] == 1):
+            frame.blit(player[int(sprite/(spriteCount/2))][3], (W/2,H/2))
+        else:
+            frame.blit(player[int(sprite/(spriteCount/2))][finalDir], (W/2,H/2))
 
 
     pygame.display.flip()
