@@ -35,7 +35,7 @@ mapsPos = maps.get_rect()
 mapsCollision = pygame.image.load("map/map2Mask.png").convert()
 mapsCollision = pygame.transform.scale(mapsCollision,(3000,3000))
 pxarray = []
-pxarray = pygame.PixelArray(mapValue.copy()) #248 177 33
+pxarray = pygame.PixelArray(mapsCollision.copy()) #248 177 33
 
 #Chargement et collage du personnage
 player = [[],[]]
@@ -57,8 +57,8 @@ liste_key = pygame.key.get_pressed()
 
 # Var Frame
 
-W = 1280
-H = 720
+W = frameSize[0]
+H = frameSize[1]
 
 # Var Fct
 
@@ -81,8 +81,23 @@ finalDir = 0;
 # Fonctions
 #=========================
 
-def isColling():
+def isColliding(side):
+    #global mapsCollision
+    global mapsPos
+    global pxarray
     
+    wallDetected = False
+    
+    upL = (int(W/2-mapsPos[0]-10),int(H/2-mapsPos[1]-10))
+    upR = (int(W/2-mapsPos[0]+70+10), int(H/2-mapsPos[1]-10))
+    doL = (int(W/2-mapsPos[0]-10), int(H/2-mapsPos[1]+70+10))
+    doR = (int(W/2-mapsPos[0]+70+10), int(H/2-mapsPos[1]+70+10))
+    
+    print(pygame.Color(pxarray[doR[0]][doR[1]]))
+    
+   
+    
+    return wallDetected
 
 #=========================
 # While
@@ -101,7 +116,7 @@ while keepGoing:
             pygame.quit()
         if event.type == KEYDOWN:
             k = event.key
-            print(event.key);
+            #print(event.key);
             
             # zqsd : 97 119 100 115
             
@@ -127,22 +142,20 @@ while keepGoing:
                 direction[3] = 0;
     
     
-    if (direction[0] == 1 && !isColliding(0)):
-        finalDir = 0
-        mapsPos = mapsPos.move(-speed, 0);
+    if (direction[0]==1 or direction[1]==1 or direction[2]==1 or direction[3]==1):
         sprite = (sprite+1)%spriteCount
-    elif (direction[1] == 1 && !isColliding(1)):
-        finalDir = 1
-        mapsPos = mapsPos.move(0, -speed);
-        sprite = (sprite+1)%spriteCount
-    elif (direction[2] == 1 && !isColliding(2)):
-        finalDir = 2
-        mapsPos = mapsPos.move(speed, 0);
-        sprite = (sprite+1)%spriteCount
-    elif (direction[3] == 1 && !isColliding(3)):
-        finalDir = 3
-        mapsPos = mapsPos.move(0, speed);
-        sprite = (sprite+1)%spriteCount
+        if (direction[0] == 1 and not isColliding(0)):
+            finalDir = 0
+            mapsPos = mapsPos.move(-speed, 0);
+        if (direction[1] == 1 and not isColliding(1)):
+            finalDir = 1
+            mapsPos = mapsPos.move(0, -speed);
+        if (direction[2] == 1 and not isColliding(2)):
+            finalDir = 2
+            mapsPos = mapsPos.move(speed, 0);
+        if (direction[3] == 1 and not isColliding(3)):
+            finalDir = 3
+            mapsPos = mapsPos.move(0, speed);
     else:
         finalDir = 3
         sprite = 0
@@ -150,7 +163,13 @@ while keepGoing:
     #if (menu == 0):
     frame.blit(fond, (0,0))
     frame.blit(maps, mapsPos)
-    frame.blit(player[int(sprite/(spriteCount/2))][finalDir], (W/2,H/2))
+    if (direction[1] == 1):
+        frame.blit(player[int(sprite/(spriteCount/2))][1], (W/2,H/2))
+    elif (direction[3] == 1):
+        frame.blit(player[int(sprite/(spriteCount/2))][3], (W/2,H/2))
+    else:
+        frame.blit(player[int(sprite/(spriteCount/2))][finalDir], (W/2,H/2))
+        
     
     pygame.display.flip()
     pygame.time.delay(10)
