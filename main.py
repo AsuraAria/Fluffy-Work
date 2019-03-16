@@ -147,6 +147,11 @@ while continuer:
         frame.blit(fond, (0,0))
         frame.blit(fond_menu_principal,(0,0))
         
+        bouton_play = pygame.image.load("textures_menus/bouton_play.png").convert()
+        bouton_quit = pygame.image.load("textures_menus/bouton_quit.png").convert()
+        frame.blit(bouton_play,(60,600))
+        frame.blit(bouton_quit,(900,600))
+        
     
     pygame.display.flip()
     pygame.time.delay(10)
