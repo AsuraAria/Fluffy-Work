@@ -32,6 +32,8 @@ maps = pygame.image.load("map/map2.png").convert()
 maps = pygame.transform.scale(maps,(3000,3000))
 mapsPos = maps.get_rect()
 
+fondmenu = pygame.image.load("textures menu/fond_menu.png").convert()
+
 #Chargement et collage du personnage
 player = [[],[]]
 for i in range(4):
@@ -57,7 +59,7 @@ H = 720
 
 # Var Fct
 
-menu = 0 #on n'est pas dans un menus
+menu = 1 #on est pas dans un menus
 
 # Var Map
 
@@ -78,6 +80,9 @@ finalDir = 0;
 #frame.blit(maps, mapPos)
         
 #pygame.display.flip()
+
+
+
 
 #BOUCLE INFINIE
 continuer = 1
@@ -113,32 +118,37 @@ while continuer:
             elif (k == 115):
                 direction[3] = 0;
     
-    
-    if (direction[0] == 1):
-        finalDir = 0
-        mapsPos = mapsPos.move(-speed, 0);
-        sprite = (sprite+1)%spriteCount
-    elif (direction[1] == 1):
-        finalDir = 1
-        mapsPos = mapsPos.move(0, -speed);
-        sprite = (sprite+1)%spriteCount
-    elif (direction[2] == 1):
-        finalDir = 2
-        mapsPos = mapsPos.move(speed, 0);
-        sprite = (sprite+1)%spriteCount
-    elif (direction[3] == 1):
-        finalDir = 3
-        mapsPos = mapsPos.move(0, speed);
-        sprite = (sprite+1)%spriteCount
-    else:
-        finalDir = 3
-        sprite = 0
-    
-    #if (menu == 0):
-    frame.blit(fond, (0,0))
-    frame.blit(maps, mapsPos)
-    frame.blit(player[int(sprite/(spriteCount/2))][finalDir], (W/2,H/2))
-    
+    if menu ==0:
+        if (direction[0] == 1):
+            finalDir = 0
+            mapsPos = mapsPos.move(-speed, 0);
+            sprite = (sprite+1)%spriteCount
+        elif (direction[1] == 1):
+            finalDir = 1
+            mapsPos = mapsPos.move(0, -speed);
+            sprite = (sprite+1)%spriteCount
+        elif (direction[2] == 1):
+            finalDir = 2
+            mapsPos = mapsPos.move(speed, 0);
+            sprite = (sprite+1)%spriteCount
+        elif (direction[3] == 1):
+            finalDir = 3
+            mapsPos = mapsPos.move(0, speed);
+            sprite = (sprite+1)%spriteCount
+        else:
+            finalDir = 3
+            sprite = 0
+        
+        #if (menu == 0):
+        frame.blit(fond, (0,0))
+        frame.blit(maps, mapsPos)
+        frame.blit(player[int(sprite/(spriteCount/2))][finalDir], (W/2,H/2))
+     
+        #menu de demarrage
+    elif menu ==1: #menu de demarrage
+        frame.blit(fond, (0,0))
+        #☻frame.blit(fondmenu, (0,0))
+        
     pygame.display.flip()
     pygame.time.delay(10)
                 
