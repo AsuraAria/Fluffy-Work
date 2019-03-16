@@ -171,7 +171,10 @@ while continuer:
             if (60<event.pos[0])&(event.pos[0]<260)&(600<event.pos[1])&(event.pos[1]<660):
                 print("easy")
             if (900<event.pos[0])&(event.pos[0]<1160)&(600<event.pos[1])&(event.pos[1]<660):
-                print("hard")    
+                print("hard")   
+                
+    #if menu == 3 : #dicodex
+        
     
     pygame.display.flip()
     pygame.time.delay(10)
