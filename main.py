@@ -13,10 +13,11 @@ Created on Sat Mar 16 15:50:56 2019
 import pygame
 from pygame.locals import *
 
+import varglobal
+
 #=========================
 # Init Window
 #=========================
-import varglobal
 
 pygame.init()
 
@@ -38,6 +39,9 @@ pygame.display.flip()
 #BOUCLE INFINIE
 continuer = 1
 while continuer:
+    
+    
+    
     for event in pygame.event.get():
         if event.type==QUIT:
             loop=0
