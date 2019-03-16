@@ -2,24 +2,143 @@
 """
 Created on Sat Mar 16 15:50:56 2019
 
-@author: UTILISATEUR
+@author: Fluffy Corp
+
 """
 
-#Importation des bibliothèques nécessaires
+#=========================
+# Import
+#=========================
+
 import pygame
 from pygame.locals import *
 
-#Initialisation de la bibliothèque Pygame
+#import varglobal
+
+#=========================
+# Init Window
+#=========================
+
 pygame.init()
 
-#Création de la fenêtre
-fenetre = pygame.display.set_mode((640, 480))
+frame = pygame.display.set_mode((1280, 720))
+frameSize = pygame.display.get_surface().get_size()
 
-#Variable qui continue la boucle si = 1, stoppe si = 0
+#Chargement et du fond
+fond = pygame.image.load("map/fond.png").convert()
+
+#Chargement de la map
+maps = pygame.image.load("map/map2.png").convert()
+maps = pygame.transform.scale(maps,(3000,3000))
+mapsPos = maps.get_rect()
+
+#Chargement et collage du personnage
+player = [[],[]]
+for i in range(4):
+    player[0].append(pygame.image.load("player/fluffitten"+str(i)+".png").convert_alpha())
+    player[0][i] = pygame.transform.scale(player[0][i],(70,70))
+for i in range(4):
+    player[1].append(pygame.image.load("player/fluffitten"+str(i)+".1.png").convert_alpha())
+    player[1][i] = pygame.transform.scale(player[1][i],(70,70))
+#frame.blit(perso, (200,300))
+
+# init
+pygame.key.set_repeat(1, 30)
+liste_key = pygame.key.get_pressed()
+
+#=========================
+# Variables
+#=========================
+
+# Var Frame
+
+W = 1280
+H = 720
+
+# Var Fct
+
+menu = 0 #on n'est pas dans un menus
+
+# Var Map
+
+mapPos = [0,0];
+
+# Var Player
+
+speed = -2;
+spriteCount = 20;
+sprite = 0;
+
+direction = [0,0,0,0]
+finalDir = 0;
+#=========================
+# While
+#=========================
+
+#frame.blit(maps, mapPos)
+        
+#pygame.display.flip()
+
+#BOUCLE INFINIE
 continuer = 1
-
-#Boucle infinie
 while continuer:
-	continue #Je place continue ici pour pouvoir relancer la boucle infinie
-                 #mais il est d'habitude remplacé par une suite d'instructions
+    for event in pygame.event.get():
+        if event.type==QUIT:
+            loop=0
+            pygame.quit()
+        if event.type == KEYDOWN:
+            k = event.key
+            print(event.key);
+            
+            # zqsd : 97 119 100 115
+            
+            if (k == 97):
+                direction[0] = 1;
+            elif (k == 119):
+                direction[1] = 1;
+            elif (k == 100):
+                direction[2] = 1;
+            elif (k == 115):
+                direction[3] = 1;
+                
+        if event.type == KEYUP:
+            k = event.key
+            
+            if (k == 97):
+                direction[0] = 0;
+            elif (k == 119):
+                direction[1] = 0;
+            elif (k == 100):
+                direction[2] = 0;
+            elif (k == 115):
+                direction[3] = 0;
+    
+    
+    if (direction[0] == 1):
+        finalDir = 0
+        mapsPos = mapsPos.move(-speed, 0);
+        sprite = (sprite+1)%spriteCount
+    elif (direction[1] == 1):
+        finalDir = 1
+        mapsPos = mapsPos.move(0, -speed);
+        sprite = (sprite+1)%spriteCount
+    elif (direction[2] == 1):
+        finalDir = 2
+        mapsPos = mapsPos.move(speed, 0);
+        sprite = (sprite+1)%spriteCount
+    elif (direction[3] == 1):
+        finalDir = 3
+        mapsPos = mapsPos.move(0, speed);
+        sprite = (sprite+1)%spriteCount
+    else:
+        finalDir = 3
+        sprite = 0
+    
+    #if (menu == 0):
+    frame.blit(fond, (0,0))
+    frame.blit(maps, mapsPos)
+    frame.blit(player[int(sprite/(spriteCount/2))][finalDir], (W/2,H/2))
+    
+    pygame.display.flip()
+    pygame.time.delay(10)
                 
