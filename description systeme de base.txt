@@ -1,0 +1,19 @@
+systeme en 2d
+
+key.event a utiliser pour la direction
+K_LEFT
+K_UP
+K_RIGHT
+K_DOWN
+ou:
+K_q
+K_z
+K_d
+K_s
+
+pour interagir
+K_a
+ou
+K_RETURN
+
+la souris pour les menus
