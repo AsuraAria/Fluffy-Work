@@ -16,6 +16,8 @@ from pygame.locals import *
 #=========================
 # Init Window
 #=========================
+import varglobal
+
 pygame.init()
 
 frame = pygame.display.set_mode((1280, 720))
@@ -29,7 +31,7 @@ frame = pygame.display.set_mode((1280, 720))
 #frame.blit(perso, (200,300))
 
 #=========================
-# 
+#
 #=========================
 pygame.display.flip()
 
