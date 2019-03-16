@@ -32,6 +32,11 @@ maps = pygame.image.load("map/map2.png").convert()
 maps = pygame.transform.scale(maps,(3000,3000))
 mapsPos = maps.get_rect()
 
+mapsCollision = pygame.image.load("map/map2Mask.png").convert()
+mapsCollision = pygame.transform.scale(mapsCollision,(3000,3000))
+pxarray = []
+pxarray = pygame.PixelArray(mapValue.copy()) #248 177 33
+
 #Chargement et collage du personnage
 player = [[],[]]
 for i in range(4):
@@ -71,6 +76,14 @@ sprite = 0;
 
 direction = [0,0,0,0]
 finalDir = 0;
+
+#=========================
+# Fonctions
+#=========================
+
+def isColling():
+    
+
 #=========================
 # While
 #=========================
@@ -80,8 +93,8 @@ finalDir = 0;
 #pygame.display.flip()
 
 #BOUCLE INFINIE
-continuer = 1
-while continuer:
+keepGoing = 1
+while keepGoing:
     for event in pygame.event.get():
         if event.type==QUIT:
             loop=0
@@ -114,19 +127,19 @@ while continuer:
                 direction[3] = 0;
     
     
-    if (direction[0] == 1):
+    if (direction[0] == 1 && !isColliding(0)):
         finalDir = 0
         mapsPos = mapsPos.move(-speed, 0);
         sprite = (sprite+1)%spriteCount
-    elif (direction[1] == 1):
+    elif (direction[1] == 1 && !isColliding(1)):
         finalDir = 1
         mapsPos = mapsPos.move(0, -speed);
         sprite = (sprite+1)%spriteCount
-    elif (direction[2] == 1):
+    elif (direction[2] == 1 && !isColliding(2)):
         finalDir = 2
         mapsPos = mapsPos.move(speed, 0);
         sprite = (sprite+1)%spriteCount
-    elif (direction[3] == 1):
+    elif (direction[3] == 1 && !isColliding(3)):
         finalDir = 3
         mapsPos = mapsPos.move(0, speed);
         sprite = (sprite+1)%spriteCount
