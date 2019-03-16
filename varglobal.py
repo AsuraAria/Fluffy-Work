@@ -1,1 +1,1 @@
-menu =0 #on n'est pas dans un menus
+menu = 0 #on n'est pas dans un menus
