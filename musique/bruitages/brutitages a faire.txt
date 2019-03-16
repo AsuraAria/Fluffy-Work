@@ -2,4 +2,5 @@
 &dialogues
 environnement pas
 &environnement vent
-saut
+&saut
+&plaque de pression
