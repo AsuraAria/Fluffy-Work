@@ -1,5 +1,5 @@
 &reussite
-dialogues
+&dialogues
 environnement pas
 &environnement vent
 saut
