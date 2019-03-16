@@ -29,12 +29,17 @@ fond = pygame.image.load("map/fond.png").convert()
 
 #Chargement de la map
 maps = pygame.image.load("map/map2.png").convert()
-maps = pygame.transform.scale(maps,(3000,3000));
+maps = pygame.transform.scale(maps,(3000,3000))
 mapsPos = maps.get_rect()
 
 #Chargement et collage du personnage
-player = pygame.image.load("player/fluffitten.png").convert_alpha()
-player = pygame.transform.scale(player,(70,70));
+player = [[],[]]
+for i in range(4):
+    player[0].append(pygame.image.load("player/fluffitten"+str(i)+".png").convert_alpha())
+    player[0][i] = pygame.transform.scale(player[0][i],(70,70))
+for i in range(4):
+    player[1].append(pygame.image.load("player/fluffitten"+str(i)+".1.png").convert_alpha())
+    player[1][i] = pygame.transform.scale(player[1][i],(70,70))
 #frame.blit(perso, (200,300))
 
 # init
@@ -60,7 +65,9 @@ mapPos = [0,0];
 
 # Var Player
 
-speed = -1;
+speed = -2;
+spriteCount = 20;
+sprite = 0;
 
 direction = [0,0,0,0]
 finalDir = 0;
@@ -87,11 +94,11 @@ while continuer:
             
             if (k == 97):
                 direction[0] = 1;
-            if (k == 119):
+            elif (k == 119):
                 direction[1] = 1;
-            if (k == 100):
+            elif (k == 100):
                 direction[2] = 1;
-            if (k == 115):
+            elif (k == 115):
                 direction[3] = 1;
                 
         if event.type == KEYUP:
@@ -99,27 +106,39 @@ while continuer:
             
             if (k == 97):
                 direction[0] = 0;
-            if (k == 119):
+            elif (k == 119):
                 direction[1] = 0;
-            if (k == 100):
+            elif (k == 100):
                 direction[2] = 0;
-            if (k == 115):
+            elif (k == 115):
                 direction[3] = 0;
     
     
     if (direction[0] == 1):
+        finalDir = 0
         mapsPos = mapsPos.move(-speed, 0);
+        sprite = (sprite+1)%spriteCount
     elif (direction[1] == 1):
+        finalDir = 1
         mapsPos = mapsPos.move(0, -speed);
+        sprite = (sprite+1)%spriteCount
     elif (direction[2] == 1):
+        finalDir = 2
         mapsPos = mapsPos.move(speed, 0);
+        sprite = (sprite+1)%spriteCount
     elif (direction[3] == 1):
+        finalDir = 3
         mapsPos = mapsPos.move(0, speed);
+        sprite = (sprite+1)%spriteCount
+    else:
+        finalDir = 3
+        sprite = 0
     
     #if (menu == 0):
     frame.blit(fond, (0,0))
     frame.blit(maps, mapsPos)
-    frame.blit(player, (W/2,H/2))
-        
+    frame.blit(player[int(sprite/(spriteCount/2))][finalDir], (W/2,H/2))
+    
     pygame.display.flip()
+    pygame.time.delay(10)
                 
