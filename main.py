@@ -2,24 +2,43 @@
 """
 Created on Sat Mar 16 15:50:56 2019
 
-@author: UTILISATEUR
+@author: Fluffy Corp
+
 """
 
-#Importation des bibliothèques nécessaires
+#=========================
+# Import
+#=========================
+
 import pygame
 from pygame.locals import *
 
-#Initialisation de la bibliothèque Pygame
+#=========================
+# Init Window
+#=========================
 pygame.init()
 
-#Création de la fenêtre
-fenetre = pygame.display.set_mode((640, 480))
+frame = pygame.display.set_mode((1280, 720))
 
-#Variable qui continue la boucle si = 1, stoppe si = 0
+#Chargement et collage du fond
+#fond = pygame.image.load("background.jpg").convert()
+#frame.blit(fond, (0,0))
+
+#Chargement et collage du personnage
+#perso = pygame.image.load("perso.png").convert_alpha()
+#frame.blit(perso, (200,300))
+
+#=========================
+# 
+#=========================
+pygame.display.flip()
+
+#BOUCLE INFINIE
 continuer = 1
-
-#Boucle infinie
 while continuer:
-	continue #Je place continue ici pour pouvoir relancer la boucle infinie
-                 #mais il est d'habitude remplacé par une suite d'instructions
-                
+    for event in pygame.event.get():
+        if event.type==QUIT:
+            loop=0
+            pygame.quit()
+        if event.type == KEYDOWN:
+            print(event.key);
