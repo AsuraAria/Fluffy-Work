@@ -61,7 +61,7 @@ H = 720
 
 # Var Fct
 
-menu = 1 #on est dans un menus
+menu = 2 #on est dans un menus
 
 # Var Map
 
@@ -152,6 +152,26 @@ while continuer:
         frame.blit(bouton_play,(60,600))
         frame.blit(bouton_quit,(900,600))
         
+        if event.type == MOUSEBUTTONDOWN :
+            if (60<event.pos[0])&(event.pos[0]<260)&(600<event.pos[1])&(event.pos[1]<660):
+                print("play")
+            if (900<event.pos[0])&(event.pos[0]<1160)&(600<event.pos[1])&(event.pos[1]<660):
+                print("quit")
+                
+    if menu ==2:#afficher le menu difficulte
+        frame.blit(fond, (0,0))
+        frame.blit(fond_menu_principal,(0,0))
+        
+        bouton_easy = pygame.image.load("textures_menus/bouton_easy.png").convert()
+        bouton_hard = pygame.image.load("textures_menus/bouton_hard.png").convert()
+        frame.blit(bouton_easy,(60,600))
+        frame.blit(bouton_hard,(900,600))
+        
+        if event.type == MOUSEBUTTONDOWN :
+            if (60<event.pos[0])&(event.pos[0]<260)&(600<event.pos[1])&(event.pos[1]<660):
+                print("easy")
+            if (900<event.pos[0])&(event.pos[0]<1160)&(600<event.pos[1])&(event.pos[1]<660):
+                print("hard")    
     
     pygame.display.flip()
     pygame.time.delay(10)
