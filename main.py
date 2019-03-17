@@ -50,7 +50,10 @@ for i in range(4):
 #frame.blit(perso, (200,300))
 
 botsPos = [[0,792.0, 1180, "?!#*&@"]]
-
+bots = [["Fluffy : Hi, my name is Fluffy and I was hired in the archeologic team here. I am here to help "
+        +"with the new language you discovered.","Chief : Ok, you have to go meet Ragnard, our expert in "
+        +"antic languages. Go north, he is waiting for you !"
+            
 bots = []
 for i in range(1):
     bots.append(pygame.image.load("bots/bot"+str(i)+".png").convert_alpha())
@@ -61,6 +64,10 @@ tuto = []
 for i in range(2):
     tuto.append(pygame.image.load("textures/tuto"+str(i)+".png").convert_alpha())
     tuto[i] = pygame.transform.scale(tuto[i],(420,120))
+
+box = pygame.image.load("textures/box.png").convert_alpha()
+box = pygame.transform.scale(box,(1200,250))
+isInteracting = False;
 
 # init
 pygame.key.set_repeat(1, 30)
@@ -181,6 +188,8 @@ while continuer:
                 direction[2] = 1;
             elif (k == 115):
                 direction[3] = 1;
+            elif (k == 101 and nearBot != -1):
+                isInteracting = True
 
         if event.type == KEYUP:
             k = event.key
@@ -195,26 +204,28 @@ while continuer:
                 direction[3] = 0;
 
     if (menu == 0):
-        if (direction[0]==1 or direction[1]==1 or direction[2]==1 or direction[3]==1):
-            sprite = (sprite+1)%spriteCount
-            if (direction[0] == 1 and not isColliding(0) and -mapsPos[0]+W/2>=0):
-                finalDir = 0
-                mapsPos = mapsPos.move(-speed, 0);
-                keyTuto[0] = 1
-            if (direction[1] == 1 and not isColliding(1) and -mapsPos[1]+H/2>=0):
-                finalDir = 1
-                mapsPos = mapsPos.move(0, -speed);
-                keyTuto[1] = 1
-            if (direction[2] == 1 and not isColliding(2) and -mapsPos[0]+W/2<=3000):
-                finalDir = 2
-                mapsPos = mapsPos.move(speed, 0);
-                keyTuto[2] = 1
-            if (direction[3] == 1 and not isColliding(3) and -mapsPos[1]+H/2<=3000):
-                finalDir = 3
-                mapsPos = mapsPos.move(0, speed);
-                keyTuto[3] = 1
-        else:
-            sprite = 0
+        
+        if (not isInteracting):
+            if (direction[0]==1 or direction[1]==1 or direction[2]==1 or direction[3]==1):
+                sprite = (sprite+1)%spriteCount
+                if (direction[0] == 1 and not isColliding(0) and -mapsPos[0]+W/2>=0):
+                    finalDir = 0
+                    mapsPos = mapsPos.move(-speed, 0);
+                    keyTuto[0] = 1
+                if (direction[1] == 1 and not isColliding(1) and -mapsPos[1]+H/2>=0):
+                    finalDir = 1
+                    mapsPos = mapsPos.move(0, -speed);
+                    keyTuto[1] = 1
+                if (direction[2] == 1 and not isColliding(2) and -mapsPos[0]+W/2<=3000):
+                    finalDir = 2
+                    mapsPos = mapsPos.move(speed, 0);
+                    keyTuto[2] = 1
+                if (direction[3] == 1 and not isColliding(3) and -mapsPos[1]+H/2<=3000):
+                    finalDir = 3
+                    mapsPos = mapsPos.move(0, speed);
+                    keyTuto[3] = 1
+            else:
+                sprite = 0
         
         #if (menu == 0):
         frame.blit(fond, (0,0))
@@ -225,21 +236,25 @@ while continuer:
         for i in range(len(bots)):
             frame.blit(bots[0],(botsPos[i][1]+mapsPos[0],botsPos[i][2]+mapsPos[1]))
             
-        if (direction[1] == 1):
+        if (direction[1] == 1 and not isInteracting):
             frame.blit(player[int(sprite/(spriteCount/2))][1], (W/2,H/2))
-        elif (direction[3] == 1):
+        elif (direction[3] == 1 and not isInteracting):
             frame.blit(player[int(sprite/(spriteCount/2))][3], (W/2,H/2))
         else:
             frame.blit(player[int(sprite/(spriteCount/2))][finalDir], (W/2,H/2))
             
         nearBot = isBot()
         
-        if (nearBot != -1):
+        if (keyTuto != [1,1,1,1]):
+            frame.blit(tuto[0],(W/2+100,H/2-100))
+            
+        if (nearBot != -1 and not isInteracting):
             keyTuto = [1,1,1,1]
             frame.blit(tuto[1],(W/2+100,H/2-100))
         
-        if (keyTuto != [1,1,1,1]):
-            frame.blit(tuto[0],(W/2+100,H/2-100))
+        if (isInteracting):
+            frame.blit(box,(40,H-250-20))
+            sprite = 0
         
     # UPDATE
     
