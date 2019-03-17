@@ -73,8 +73,9 @@ for i in range(2):
     bots[i] = pygame.transform.scale(bots[i],(70,70))
 
 keyTuto = [0,0,0,0]
+dicodecFound = False
 tuto = []
-for i in range(2):
+for i in range(3):
     tuto.append(pygame.image.load("textures/tuto"+str(i)+".png").convert_alpha())
     tuto[i] = pygame.transform.scale(tuto[i],(420,120))
 
@@ -124,9 +125,9 @@ finalDir = 0;
 # Font
 
 # Statue et Ecritaux : gabriola
-gabriolaFont = pygame.font.SysFont("gabriola", 57)
+gabriolaFont = pygame.font.SysFont("gabriola", 54)
 # Character : constantia
-constantiaFont = pygame.font.SysFont("constantia", 57)
+constantiaFont = pygame.font.SysFont("constantia", 54)
 
 # Scene 1
 
@@ -242,19 +243,19 @@ while continuer:
         if (not isInteracting):
             if (direction[0]==1 or direction[1]==1 or direction[2]==1 or direction[3]==1):
                 sprite = (sprite+1)%spriteCount
-                if (direction[0] == 1 and not isColliding(0) and -mapsPos[0]+W/2>=0):
+                if (direction[0] == 1 and -mapsPos[0]+W/2>=0 and not isColliding(0)):
                     finalDir = 0
                     mapsPos = mapsPos.move(-speed, 0);
                     keyTuto[0] = 1
-                if (direction[1] == 1 and not isColliding(1) and -mapsPos[1]+H/2>=0):
+                if (direction[1] == 1 and -mapsPos[1]+H/2>=0 and not isColliding(1)):
                     finalDir = 1
                     mapsPos = mapsPos.move(0, -speed);
                     keyTuto[1] = 1
-                if (direction[2] == 1 and not isColliding(2) and -mapsPos[0]+W/2<=3000):
+                if (direction[2] == 1 and -mapsPos[0]+W/2+70<=2990 and not isColliding(2)):
                     finalDir = 2
                     mapsPos = mapsPos.move(speed, 0);
                     keyTuto[2] = 1
-                if (direction[3] == 1 and not isColliding(3) and -mapsPos[1]+H/2<=3000):
+                if (direction[3] == 1 and -mapsPos[1]+H/2+70<=2990 and not isColliding(3)):
                     finalDir = 3
                     mapsPos = mapsPos.move(0, speed);
                     keyTuto[3] = 1
@@ -281,23 +282,29 @@ while continuer:
         
         if (keyTuto != [1,1,1,1]):
             frame.blit(tuto[0],(W/2+100,H/2-100))
+        if (dicodecFound):
+            frame.blit(tuto[2],(W-310,H-75))
             
         if (nearBot != -1 and not isInteracting):
             keyTuto = [1,1,1,1]
             frame.blit(tuto[1],(W/2+100,H/2-100))
         
+        
         if (isInteracting):
+            print(nearBot)
             frame.blit(box,(40,H-250-20))
             if (whichDiag <= len(botsDiag[nearBot])-1):
                 text1 = constantiaFont.render(botsDiag[nearBot][whichDiag],1,White)
                 text2 = constantiaFont.render(botsDiag[nearBot][whichDiag+1],1,White)
                 text3 = constantiaFont.render(botsDiag[nearBot][whichDiag+2],1,White)
-                frame.blit(text1,(60,H-250))
-                frame.blit(text2,(60,H-250+77))
-                frame.blit(text3,(60,H-250+154))
+                frame.blit(text1,(110,H-250+20))
+                frame.blit(text2,(110,H-250+80))
+                frame.blit(text3,(110,H-250+140))
             else:
                 isInteracting = False;
                 whichDiag = 0
+                if (nearBot == 1):
+                   dicodecFound = True
             sprite = 0
         
     # UPDATE
