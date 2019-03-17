@@ -49,13 +49,26 @@ for i in range(4):
     player[1][i] = pygame.transform.scale(player[1][i],(70,70))
 #frame.blit(perso, (200,300))
 
-botsPos = [[0,792.0, 1180, "?!#*&@"]]
-bots = [["Fluffy : Hi, my name is Fluffy and I was hired in the archeologic team here. I am here to help "
-        +"with the new language you discovered.","Chief : Ok, you have to go meet Ragnard, our expert in "
-        +"antic languages. Go north, he is waiting for you !"
+botsPos = [[0,792.0, 1180, "?!#*&@"],[1,1794.0, 432.0, "?!#*&@"]]
+botsDiag = [["Fluffy : Hi, my name is Fluffy and I was hired",
+             "in the archeologic team here. I am here to",
+             "help with the new language you discovered.",
+             "Chief : Ok, you have to go meet Ragnard, our",
+             "expert in antic languages. Go north, he is",
+             "waiting for you at the camp !"],
+    
+            ["Expert : Hi ! You are the new one ? Good. You",
+             "will need this : It is a DICODEX !",
+             "It will automatically save any word you will",
+             "learn during your exploration. There are",
+             "already some words in it, you should check",
+             "them before you go.",
+             "Go East to the temple, I'll come to see you",
+             "later. Good luck !",
+             ""]]
             
 bots = []
-for i in range(1):
+for i in range(2):
     bots.append(pygame.image.load("bots/bot"+str(i)+".png").convert_alpha())
     bots[i] = pygame.transform.scale(bots[i],(70,70))
 
@@ -77,6 +90,9 @@ liste_key = pygame.key.get_pressed()
 # Variables
 #=========================
 
+White = (255,255,255)
+Black = (0,0,0)
+
 # Var Frame
 
 W = frameSize[0]
@@ -85,7 +101,11 @@ H = frameSize[1]
 # Var Fct
 
 menu = 0 #on est pas dans un menus
-nearBot = -1;
+nearBot = -1
+
+whichDiag = 0
+resetSpace = True;
+
 #=======
 
 # Var Map
@@ -103,10 +123,12 @@ finalDir = 0;
 
 # Font
 
-#myfont = pygame.font.SysFont("monospace", 20)
+# Statue et Ecritaux : gabriola
+gabriolaFont = pygame.font.SysFont("gabriola", 57)
+# Character : constantia
+constantiaFont = pygame.font.SysFont("constantia", 57)
 
 # Scene 1
-
 
 #=========================
 # Fonctions
@@ -178,8 +200,14 @@ while continuer:
             k = event.key
             #print(event.key);
 
+            #Debug
+            
+            if (k == 13):
+                speed = -20
+            if (k == 8):
+                speed = -2
+            
             # zqsd : 97 119 100 115
-
             if (k == 97):
                 direction[0] = 1;
             elif (k == 119):
@@ -188,7 +216,10 @@ while continuer:
                 direction[2] = 1;
             elif (k == 115):
                 direction[3] = 1;
-            elif (k == 101 and nearBot != -1):
+            if (k == 101 and nearBot != -1 and resetSpace):
+                if (isInteracting):
+                    whichDiag += 3
+                resetSpace = False
                 isInteracting = True
 
         if event.type == KEYUP:
@@ -202,7 +233,10 @@ while continuer:
                 direction[2] = 0;
             elif (k == 115):
                 direction[3] = 0;
+            if (k == 101):
+                resetSpace = True;
 
+    #print(resetSpace)
     if (menu == 0):
         
         if (not isInteracting):
@@ -254,6 +288,16 @@ while continuer:
         
         if (isInteracting):
             frame.blit(box,(40,H-250-20))
+            if (whichDiag <= len(botsDiag[nearBot])-1):
+                text1 = constantiaFont.render(botsDiag[nearBot][whichDiag],1,White)
+                text2 = constantiaFont.render(botsDiag[nearBot][whichDiag+1],1,White)
+                text3 = constantiaFont.render(botsDiag[nearBot][whichDiag+2],1,White)
+                frame.blit(text1,(60,H-250))
+                frame.blit(text2,(60,H-250+77))
+                frame.blit(text3,(60,H-250+154))
+            else:
+                isInteracting = False;
+                whichDiag = 0
             sprite = 0
         
     # UPDATE
