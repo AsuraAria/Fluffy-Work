@@ -25,6 +25,11 @@ pygame.init()
 frame = pygame.display.set_mode((1280, 720))
 frameSize = pygame.display.get_surface().get_size()
 
+pygame.display.set_caption("Fluffy French Adventure")
+
+icon = pygame.image.load("player/icon.png").convert_alpha()
+pygame.display.set_icon(icon)
+
 #Chargement et du fond
 fond = pygame.image.load("map/fond.png").convert()
 
@@ -67,7 +72,8 @@ for i in range(4):
 #frame.blit(perso, (200,300))
 
 botsPos = [[0,792.0, 1180, "?!#*&@"],[1,1794.0, 180.0, "?!#*&@"],[2,2586.0, 250.0,"door"],
-            [3,740.0, 450.0,"sign"],[4,790.0, 90.0,"door"],[1,1794.0, 180.0, "statue"]]
+            [3,750.0, 450.0,"sign"],[4,790.0, 90.0,"door"],
+            [5,600.0, 550.0, "statue"],[2,2586.0, 250.0,"door"]]
     
 botsDiag = [["Fluffy : Hi, my name is Fluffy and I was hired",
              "in the archeologic team here. I am here to",
@@ -75,7 +81,6 @@ botsDiag = [["Fluffy : Hi, my name is Fluffy and I was hired",
              "Chief : Ok, you have to go meet Ragnard, our",
              "expert in antic languages. Go north, he is",
              "waiting for you at the camp !"],
-    
             ["Expert : Hi ! You are the new one ? Good. You",
              "will need this : It is a DICODEX !",
              "It will automatically save any word you will",
@@ -84,15 +89,22 @@ botsDiag = [["Fluffy : Hi, my name is Fluffy and I was hired",
              "them before you go.",
              "Go East to the temple, I'll come to see you",
              "later. Good luck !",
-             ""],[],["Allez sur la pierre à côté de la porte","",""],[],
+             ""],[],
+             
+             ["Allez sur la pierre à côté de la porte","",""],[],
+             
              ["Statue : To over pass me, you have to say the",
-              "opposite of 'sous'",""]]
+              "opposite of : 'sous'","",
+              "Fluffy : (choose the anwser with WASD key)",
+              "W - Sous    A - Sur   S - A coté","D - Porte"],[]]
             
 bots = []
-for i in range(5):
+for i in range(7):
     bots.append(pygame.image.load("bots/bot"+str(i)+".png").convert_alpha())
     if (i==3):
         bots[i] = pygame.transform.scale(bots[i],(140,140))
+    elif (i==5):
+        bots[i] = pygame.transform.scale(bots[i],(140,280))
     else:
         bots[i] = pygame.transform.scale(bots[i],(70,70))
 
@@ -186,8 +198,17 @@ constantiaFont = pygame.font.SysFont("constantia", 54)
 
 resetVictorySound = True;
 
+#Statue
+
+answering = False
+choice = -1
+resetChoice = True
+
 # Scene 1
 switch1 = False;
+
+# Scene 2
+switch2 = False;
 
 #=========================
 # Fonctions
@@ -237,6 +258,7 @@ def isColliding(side):
     return wallDetected
 
 def isBot():
+    global curentMap
     global mapsPos
     global pxarray
     global bots
@@ -250,6 +272,10 @@ def isBot():
                 return botsPos[i][0]
     elif (currentMap == 1):
         for i in range(3,5):
+            if (sqrt((-mapsPos[currentMap][0]+W/2-botsPos[i][1])**2+(-mapsPos[currentMap][1]+H/2-botsPos[i][2])**2) <= 150):
+                return botsPos[i][0]
+    elif (currentMap == 2):
+        for i in range(5,7):
             if (sqrt((-mapsPos[currentMap][0]+W/2-botsPos[i][1])**2+(-mapsPos[currentMap][1]+H/2-botsPos[i][2])**2) <= 150):
                 return botsPos[i][0]
     
@@ -273,8 +299,31 @@ def evaluateDoor():
     if (nearBot == 4 and switch1):
         son_porte.play()
         currentMap = 2
+        mapsPos[currentMap][0] = -144
+        mapsPos[currentMap][1] = -445
         resetVictorySound = True
-        dico.append(["Allez"])
+        dico.append(["Aller","Verbe 'To go'"])
+    if (nearBot == 6 and switch2):
+        son_porte.play()
+        currentMap = 3
+        resetVictorySound = True
+        #dico.append(["Allez"])
+
+def evaluateAnwser():
+    global currentMap
+    global answering
+    global nearBot
+    global HP
+    
+    if (nearBot == 5):
+        if (choice != -1):
+            if (choice == 1):
+                answering = False
+                switch2 = True
+            else:
+                HP-= 1;
+    print(HP)
+    
 
 #=========================
 # While
@@ -322,7 +371,7 @@ while continuer:
         
         if event.type == KEYDOWN:
             k = event.key
-            #print(event.key);
+            print(event.key);
             
             if (k == 13):
                 speed = -20
@@ -335,18 +384,23 @@ while continuer:
             # zqsd : 97 119 100 115
             if (k == 97):
                 direction[0] = 1;
+                choice = 0
             elif (k == 119):
                 direction[1] = 1;
                 if (menu == 3 and resetH):
                     positiondict = (max(0,positiondict-1))
                     resetH = False
+                choice = 1
             elif (k == 100):
                 direction[2] = 1;
+                choice = 2
             elif (k == 115):
                 direction[3] = 1;
                 if (menu == 3 and resetB):
                     positiondict=min(n-1,positiondict+1)
                     resetB = False
+                choice = 3
+            
             if (k == 101 and nearBot != -1 and resetE):
                 if (isInteracting):
                     whichDiag += 3
@@ -367,16 +421,20 @@ while continuer:
 
             if (k == 97):
                 direction[0] = 0;
+                resetChoice = True;
             elif (k == 119):
                 direction[1] = 0;
                 resetH = True
+                resetChoice = True;
             elif (k == 100):
                 direction[2] = 0;
+                resetChoice = True;
             elif (k == 115):
                 direction[3] = 0;
                 resetB = True
+                resetChoice = True;
             if (k == 101):
-                resetE = True;
+                resetE = True
             if (k == 113):
                 resetA = True
 
@@ -430,6 +488,12 @@ while continuer:
         elif (currentMap == 1):
             for i in range(3,5):
                 frame.blit(bots[i],(botsPos[i][1]+mapsPos[currentMap][0],botsPos[i][2]+mapsPos[currentMap][1]))
+        elif(currentMap == 2):
+            for i in range(5,7):
+                if (botsPos[i][3] == "statue"):
+                    frame.blit(bots[i],(botsPos[i][1]+mapsPos[currentMap][0],botsPos[i][2]+mapsPos[currentMap][1]-150))
+                else:
+                    frame.blit(bots[i],(botsPos[i][1]+mapsPos[currentMap][0],botsPos[i][2]+mapsPos[currentMap][1]))
             
         if (direction[1] == 1 and not isInteracting):
             frame.blit(player[int(sprite/(spriteCount/2))][1], (W/2,H/2))
@@ -464,10 +528,23 @@ while continuer:
                     frame.blit(text2,(110,H-250+80))
                     frame.blit(text3,(110,H-250+140))
                 else:
-                    isInteracting = False;
-                    whichDiag = 0
+                    if (botsPos[nearBot][3] == "statue"):
+                        answering = True
+                        
+                    if (answering):
+                        frame.blit(text1,(110,H-250+20))
+                        frame.blit(text2,(110,H-250+80))
+                        frame.blit(text3,(110,H-250+140))
+                        if (resetChoice):
+                            resetChoice = False
+                            evaluateAnwser()
+                    else:
+                        isInteracting = False;
+                        whichDiag = 0
+                        
                     if (nearBot == 1):
                        dicodecFound = True
+                       
                 sprite = 0
             else:
                 evaluateDoor()
