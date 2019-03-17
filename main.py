@@ -103,13 +103,19 @@ box = pygame.image.load("textures/box.png").convert_alpha()
 box = pygame.transform.scale(box,(1200,250))
 isInteracting = False;
 
-#heart = pygame.image.load("").convert()
+heart = pygame.image.load("textures/heart.png").convert_alpha()
+
+counter = 0
+intro = []
+for i in range(1,80):
+    intro.append(pygame.image.load("Sheer_Madness/troll"+str(i)+".png").convert())
+    intro[i-1] = pygame.transform.scale(intro[i-1],(1280,720))
 
 # init
 pygame.key.set_repeat(1, 30)
 liste_key = pygame.key.get_pressed()
 
-pygame.mixer.music.load("musique/fluffy_work_principal.wav")
+pygame.mixer.music.load("musique/bruitages/vent ou mer.wav")
 son_trappe = pygame.mixer.Sound("musique/bruitages/plaque pression fenetre.wav")
 son_dial = pygame.mixer.Sound("musique/bruitages/clickparole.wav")
 son_dico = pygame.mixer.Sound("musique/bruitages/clickparole1.wav")
@@ -125,6 +131,8 @@ n = 0;
 #=========================
 # Variables
 #=========================
+
+HP = 3
 
 difficulty = -1
 
@@ -253,17 +261,10 @@ def evaluateDoor():
     if (nearBot == 4 and switch1):
         currentMap = 2
         resetVictorySound = True
-        
 
 #=========================
 # While
 #=========================
-
-#frame.blit(maps, mapPos)
-
-#pygame.display.flip()
-
-#pygame.mixer.music.play(-1)
 
 #BOUCLE INFINIE
 continuer = 1
@@ -282,6 +283,7 @@ while continuer:
                         menu = 1
                     else:
                         menu = 2
+                    son_trappe.play()
                 if (150<event.pos[0])&(event.pos[0]<475)&(460<event.pos[1])&(event.pos[1]<570):
                     son_trappe.play()
                     continuer=0
@@ -292,11 +294,13 @@ while continuer:
                 if (150<event.pos[0])&(event.pos[0]<460)&(280<event.pos[1])&(event.pos[1]<380):
                     son_trappe.play()
                     difficulty = 0
-                    menu = 2
+                    menu = -1
+                    pygame.mixer.music.play(-1)
                 if (150<event.pos[0])&(event.pos[0]<475)&(460<event.pos[1])&(event.pos[1]<570):
                     son_trappe.play()
                     difficulty = 1
-                    menu = 2
+                    menu = -1
+                    pygame.mixer.music.play(-1)
                 resetMouse = False
         
         if event.type == MOUSEBUTTONUP:
@@ -311,7 +315,7 @@ while continuer:
             if (k == 8):
                 speed = -2
             
-            if (k==27):
+            if (k==27 and menu != -1):
                 menu = 0
             
             # zqsd : 97 119 100 115
@@ -363,7 +367,17 @@ while continuer:
                 resetA = True
 
     #print(resetSpace)
-    if (menu == 0 and continuer!=0):
+    if (menu == -1 and continuer!=0):
+        if (counter<79):
+            frame.blit(intro[counter], (0,0))
+            counter += 1
+            pygame.time.delay(90)
+        elif (counter>=79):
+            menu = 2
+            pygame.mixer.music.fadeout(1000)
+            pygame.mixer.music.load("musique/fluffy_work_principal.wav")
+            pygame.mixer.music.play(-1)
+    elif (menu == 0 and continuer!=0):
         frame.blit(menu0, (0,0))
     elif (menu == 1 and continuer!=0):
         frame.blit(menu1, (0,0))
@@ -421,6 +435,8 @@ while continuer:
             keyTuto = [1,1,1,1]
             frame.blit(tuto[1],(W/2+100,H/2-100))
         
+        for i in range(HP):
+            frame.blit(heart,(i*70,0))
         
         if (isInteracting):
             #print(nearBot)
@@ -463,7 +479,7 @@ while continuer:
         #print(trad)
         affiche_trad = gabriolaFont.render(trad, 1, Black)
         frame.blit(affiche_trad, (500, 210))
-    
+        
     # UPDATE
     
     if (continuer!=0):
