@@ -61,8 +61,9 @@ H = 720
 
 # Var Fct
 
-menu = 2 #on est dans un menus
-
+menu = 3 #on est dans un menus
+positiondict =0 #on commence au debut du dictionnaire
+myfont = pygame.font.SysFont("comicsansms", 40)#pour ecrire le dictionnaire
 # Var Map
 
 mapPos = [0,0];
@@ -173,9 +174,37 @@ while continuer:
             if (900<event.pos[0])&(event.pos[0]<1160)&(600<event.pos[1])&(event.pos[1]<660):
                 print("hard")   
                 
-    #if menu == 3 : #dicodex
+    if menu == 3 : #dicodex
+        import dictionnaire
+        frame.blit(fond, (0,0))
+        frame.blit(fond_menu_principal,(0,0))
+        #print(dictionnaire.dict)
+        #positiondict =0
+        n = len(dictionnaire.dict)
+        #noms = ["mot1","2","3","4","mot5","mot6","mot7","mot8","9","10"]
+        noms = dictionnaire.dict[positiondict:min(n,positiondict+9)]
+        #print(noms)
+        lonfinal = len(noms)
+        i=0
+        str_dicodex = myfont.render("Mon DICODEX", 1, (0,0,0))
         
-    
+        if event.type == KEYDOWN:
+            positiondict=min(n,positiondict+1)
+        if event.type == KEYUP:
+            positiondict=max(0,positiondict-1)
+        
+        frame.blit(str_dicodex, (400, 50))
+        for i in range(0,lonfinal):
+            mot = myfont.render(noms[i][0], 1, (0,0,0))
+            frame.blit(mot, (60, 100+i*60))
+        
+        trad = dictionnaire.dict[positiondict][1]
+        #print(trad)
+        #trad = dictionnaire.cherche_fr_ang(trad,dictionnaire.dict)
+        #print(trad)
+        affiche_trad = myfont.render(trad, 1, (0,0,0))
+        frame.blit(affiche_trad, (500, 200))
+        
     pygame.display.flip()
     pygame.time.delay(10)
                 
