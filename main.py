@@ -28,6 +28,10 @@ frameSize = pygame.display.get_surface().get_size()
 #Chargement et du fond
 fond = pygame.image.load("map/fond.png").convert()
 
+#Chargement du menu
+menu0 = pygame.image.load("textures/menu0.png").convert()
+menu1 = pygame.image.load("textures/menu1.png").convert()
+
 #Chargement de la map
 maps = []
 mapsPos = []
@@ -103,9 +107,23 @@ isInteracting = False;
 pygame.key.set_repeat(1, 30)
 liste_key = pygame.key.get_pressed()
 
+pygame.mixer.music.load("musique/fluffy_work_principal.wav")
+son_trappe = pygame.mixer.Sound("musique/bruitages/plaque pression fenetre.wav")
+son_dial = pygame.mixer.Sound("musique/bruitages/clickparole.wav")
+son_victory = pygame.mixer.Sound("musique/bruitages/victoire.wav")
+
+# DICO
+
+fond_dico = pygame.image.load("textures/fond_dicodec.png").convert_alpha()
+
+dico = [["Pierre","Rock"],["Sur","Above"],["Sous","Under"],["A coté","Next to"]]
+positiondict = 0
+n = 0;
 #=========================
 # Variables
 #=========================
+
+difficulty = -1
 
 White = (255,255,255)
 Black = (0,0,0)
@@ -121,7 +139,11 @@ menu = 0 #on est pas dans un menus
 nearBot = -1
 
 whichDiag = 0
-resetSpace = True;
+resetA = True;
+resetE = True;
+resetH = True;
+resetB = True;
+resetMouse = True;
 
 #=======
 
@@ -141,11 +163,16 @@ finalDir = 0;
 # Font
 
 # Statue et Ecritaux : gabriola
-gabriolaFont = pygame.font.SysFont("gabriola", 54)
+gabriolaFontB = pygame.font.SysFont("gabriola", 60, 1)
+gabriolaFont = pygame.font.SysFont("gabriola", 75, 0)
 # Character : constantia
 constantiaFont = pygame.font.SysFont("constantia", 54)
 
+resetVictorySound = True;
+
 # Scene 1
+switch1 = False;
+
 #=========================
 # Fonctions
 #=========================
@@ -155,6 +182,8 @@ def isColliding(side):
     global currentMap
     global mapsPos
     global pxarray
+    global resetVictorySound
+    global switch1
 
     wallDetected = False
 
@@ -162,6 +191,8 @@ def isColliding(side):
     upR = (int(W/2-mapsPos[currentMap][0]+70), int(H/2-mapsPos[currentMap][1]+40))
     doL = (int(W/2-mapsPos[currentMap][0]), int(H/2-mapsPos[currentMap][1]+70))
     doR = (int(W/2-mapsPos[currentMap][0]+70), int(H/2-mapsPos[currentMap][1]+70))
+    
+    center = (int(W/2-mapsPos[currentMap][0]+40),int(H/2-mapsPos[currentMap][1]+40))
 
     #print(pygame.Color(pxarray[doR[0]][doR[1]]))
 
@@ -178,6 +209,15 @@ def isColliding(side):
         if (pygame.Color(pxarray[currentMap][doL[0]][doL[1]+5]) == (0, 248, 177, 33) or pygame.Color(pxarray[currentMap][doR[0]][doR[1]+5]) == (0, 248, 177, 33)):
             return True;
 
+    if (pygame.Color(pxarray[currentMap][center[0]][center[1]]) == (0, 255, 0, 0)):
+        son_trappe.play()
+        switch1 = True;
+        if (resetVictorySound):
+            resetVictorySound = False
+            son_victory.play()
+    if (pygame.Color(pxarray[currentMap][center[0]][center[1]]) == (0, 250, 0, 0)):
+        son_trappe.play()
+
     return wallDetected
 
 def isBot():
@@ -187,8 +227,6 @@ def isBot():
     global botsPos
     global W
     global H
-
-    botDetected = False
 
     for i in range(len(bots)):
         if (sqrt((-mapsPos[currentMap][0]+W/2-botsPos[i][1])**2+(-mapsPos[currentMap][1]+H/2-botsPos[i][2])**2) <= 150):
@@ -209,8 +247,9 @@ def evaluateDoor():
         currentMap = 1
         mapsPos[currentMap][0] = -144
         mapsPos[currentMap][1] = -445
-    if (nearBot == 4):
+    if (nearBot == 4 and switch1):
         currentMap = 2
+        resetVictorySound = True
         
 
 #=========================
@@ -221,6 +260,8 @@ def evaluateDoor():
 
 #pygame.display.flip()
 
+pygame.mixer.music.play(-1)
+
 #BOUCLE INFINIE
 continuer = 1
 while continuer:
@@ -228,31 +269,76 @@ while continuer:
     
     for event in pygame.event.get():
         if event.type==QUIT:
-            loop=0
+            continuer=0
             pygame.quit()
+        if event.type == MOUSEBUTTONDOWN:
+            
+            if (menu == 0 and resetMouse):
+                if (150<event.pos[0])&(event.pos[0]<460)&(280<event.pos[1])&(event.pos[1]<380):
+                    if (difficulty == -1):
+                        menu = 1
+                    else:
+                        menu = 2
+                if (150<event.pos[0])&(event.pos[0]<475)&(460<event.pos[1])&(event.pos[1]<570):
+                    son_trappe.play()
+                    continuer=0
+                    pygame.quit()
+                resetMouse = False
+                    
+            if (menu == 1 and resetMouse):
+                if (150<event.pos[0])&(event.pos[0]<460)&(280<event.pos[1])&(event.pos[1]<380):
+                    son_trappe.play()
+                    difficulty = 0
+                    menu = 2
+                if (150<event.pos[0])&(event.pos[0]<475)&(460<event.pos[1])&(event.pos[1]<570):
+                    son_trappe.play()
+                    difficulty = 1
+                    menu = 2
+                resetMouse = False
+        
+        if event.type == MOUSEBUTTONUP:
+            resetMouse = True
+        
         if event.type == KEYDOWN:
             k = event.key
-            #print(event.key);
+            print(event.key);
             
             if (k == 13):
                 speed = -20
             if (k == 8):
                 speed = -2
             
+            if (k==27):
+                menu = 0
+            
             # zqsd : 97 119 100 115
             if (k == 97):
                 direction[0] = 1;
             elif (k == 119):
                 direction[1] = 1;
+                if (menu == 3 and resetH):
+                    positiondict = (max(0,positiondict-1))
+                    resetH = False
             elif (k == 100):
                 direction[2] = 1;
             elif (k == 115):
                 direction[3] = 1;
-            if (k == 101 and nearBot != -1 and resetSpace):
+                if (menu == 3 and resetB):
+                    positiondict=min(n-1,positiondict+1)
+                    resetB = False
+            if (k == 101 and nearBot != -1 and resetE):
                 if (isInteracting):
                     whichDiag += 3
-                resetSpace = False
+                if (botsPos[nearBot][3] != "door"):
+                    son_dial.play()
+                resetE = False
                 isInteracting = True
+            if (k == 113 and resetA and dicodecFound):
+                if menu == 2:
+                    menu = 3
+                elif menu ==3:
+                    menu = 2
+                resetA = False
 
         if event.type == KEYUP:
             k = event.key
@@ -261,15 +347,23 @@ while continuer:
                 direction[0] = 0;
             elif (k == 119):
                 direction[1] = 0;
+                resetH = True
             elif (k == 100):
                 direction[2] = 0;
             elif (k == 115):
                 direction[3] = 0;
+                resetB = True
             if (k == 101):
-                resetSpace = True;
+                resetE = True;
+            if (k == 113):
+                resetA = True
 
     #print(resetSpace)
-    if (menu == 0):
+    if (menu == 0 and continuer!=0):
+        frame.blit(menu0, (0,0))
+    elif (menu == 1 and continuer!=0):
+        frame.blit(menu1, (0,0))
+    elif (menu == 2 and continuer!=0):
         
         if (not isInteracting):
             if (direction[0]==1 or direction[1]==1 or direction[2]==1 or direction[3]==1):
@@ -293,7 +387,6 @@ while continuer:
             else:
                 sprite = 0
         
-        #if (menu == 0):
         frame.blit(fond, (0,0))
         frame.blit(maps[currentMap], mapsPos[currentMap])
         print((-mapsPos[currentMap][0]+W/2,-mapsPos[currentMap][1]+H/2))
@@ -344,8 +437,31 @@ while continuer:
                 sprite = 0
             else:
                 evaluateDoor()
+    
+    elif (menu == 3 and continuer!=0):
         
+        #aframe.blit(fond, (0,0))
+        frame.blit(fond_dico,(0,0))
+        n = len(dico)
+        noms = dico[positiondict:min(n,positiondict+9)]
+        lonfinal = len(noms)
+        i=0
+        str_dicodex = gabriolaFontB.render("Mon DICODEX", 1, Black)
+            
+        frame.blit(str_dicodex, (W/2-gabriolaFontB.size("Mon DICODEX")[0]/2, 80))
+        for i in range(0,lonfinal):
+            mot = gabriolaFont.render(noms[i][0], 1, Black)
+            frame.blit(mot, (100, 110+i*60))
+        
+        trad = dico[positiondict][1]
+        #print(trad)
+        #trad = dictionnaire.cherche_fr_ang(trad,dictionnaire.dict)
+        #print(trad)
+        affiche_trad = gabriolaFont.render(trad, 1, Black)
+        frame.blit(affiche_trad, (500, 210))
+    
     # UPDATE
     
-    pygame.display.flip()
-    pygame.time.delay(10)
+    if (continuer!=0):
+        pygame.display.flip()
+        pygame.time.delay(10)
