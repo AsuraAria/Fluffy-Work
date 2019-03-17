@@ -14,6 +14,11 @@ Adam RIVIERE
 jeux "Fluffy French Adventure"
 
 Jeux d'énigmes pour apprendre le français
+
+lancer main.py pour jourt
+
+La librerie pygame doie installé
+
 Le clavier est en qwerty de base
 
 en azerty:
