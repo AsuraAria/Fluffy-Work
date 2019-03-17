@@ -4,3 +4,4 @@ environnement pas
 &environnement vent
 &saut
 &plaque de pression
+ouverture porte
