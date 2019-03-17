@@ -33,9 +33,11 @@ maps = pygame.transform.scale(maps,(3000,3000))
 mapsPos = maps.get_rect()
 
 
-fond_menu_principal = pygame.image.load("textures_menus/fond_menu_principal.png").convert()
+fond_menu_principal = pygame.image.load("textures_menus/MENU_OF_THE_DEAD_1_!!!.png").convert()
 fond_menu_principal = pygame.transform.scale(fond_menu_principal,(1280, 720))
 
+fond_menu_difficulty = pygame.image.load("textures_menus/MENU_OF_THE_DEAD_2_!!!.png").convert()
+fond_menu_difficulty = pygame.transform.scale(fond_menu_difficulty,(1280, 720))
 
 fond_dico = pygame.image.load("textures_menus/Fond_Pokedex.png").convert()
 fond_dico = pygame.transform.scale(fond_dico,(1280, 720))
@@ -152,30 +154,33 @@ while continuer:
         frame.blit(fond, (0,0))
         frame.blit(fond_menu_principal,(0,0))
         
-        bouton_play = pygame.image.load("textures_menus/menu_play.png").convert()
-        bouton_quit = pygame.image.load("textures_menus/menu_quit.png").convert()
-        frame.blit(bouton_play,(60,600))
-        frame.blit(bouton_quit,(900,600))
+#        bouton_play = pygame.image.load("textures_menus/menu_play.png").convert()
+#        bouton_quit = pygame.image.load("textures_menus/menu_quit.png").convert()
+#        frame.blit(bouton_play,(60,600))
+#        frame.blit(bouton_quit,(900,600))
         
         if event.type == MOUSEBUTTONDOWN :
-            if (60<event.pos[0])&(event.pos[0]<260)&(600<event.pos[1])&(event.pos[1]<660):
+            if (150<event.pos[0])&(event.pos[0]<460)&(280<event.pos[1])&(event.pos[1]<380):
                 print("play")
-            if (900<event.pos[0])&(event.pos[0]<1160)&(600<event.pos[1])&(event.pos[1]<660):
+            if (150<event.pos[0])&(event.pos[0]<475)&(460<event.pos[1])&(event.pos[1]<570):
                 print("quit")
-                
+    #150,280
+    #460,380
+    #.150,475
+    #460,570
     if menu ==2:#afficher le menu difficulte
         frame.blit(fond, (0,0))
-        frame.blit(fond_menu_principal,(0,0))
+        frame.blit(fond_menu_difficulty,(0,0))
         
-        bouton_easy = pygame.image.load("textures_menus/menu_easy.png").convert()
-        bouton_hard = pygame.image.load("textures_menus/menu_Hardt.png").convert()
-        frame.blit(bouton_easy,(60,600))
-        frame.blit(bouton_hard,(800,600))
+#        bouton_easy = pygame.image.load("textures_menus/menu_easy.png").convert()
+#        bouton_hard = pygame.image.load("textures_menus/menu_Hardt.png").convert()
+#        frame.blit(bouton_easy,(60,600))
+#        frame.blit(bouton_hard,(800,600))
         
         if event.type == MOUSEBUTTONDOWN :
-            if (60<event.pos[0])&(event.pos[0]<260)&(600<event.pos[1])&(event.pos[1]<660):
+            if (150<event.pos[0])&(event.pos[0]<460)&(280<event.pos[1])&(event.pos[1]<380):
                 print("easy")
-            if (900<event.pos[0])&(event.pos[0]<1160)&(600<event.pos[1])&(event.pos[1]<660):
+            if (150<event.pos[0])&(event.pos[0]<475)&(460<event.pos[1])&(event.pos[1]<570):
                 print("hard")   
                 
     if menu == 3 : #dicodex
