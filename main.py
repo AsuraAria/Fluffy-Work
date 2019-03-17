@@ -64,7 +64,7 @@ H = 720
 
 # Var Fct
 
-menu = 3 #on est dans un menus
+menu = 2 #on est dans un menus
 positiondict =0 #on commence au debut du dictionnaire
 myfont = pygame.font.SysFont("comicsansms", 40)#pour ecrire le dictionnaire
 # Var Map
@@ -168,7 +168,7 @@ while continuer:
         frame.blit(fond_menu_principal,(0,0))
         
         bouton_easy = pygame.image.load("textures_menus/menu_easy.png").convert()
-        bouton_hard = pygame.image.load("textures_menus/menu_easy.png").convert()
+        bouton_hard = pygame.image.load("textures_menus/menu_Hardt.png").convert()
         frame.blit(bouton_easy,(60,600))
         frame.blit(bouton_hard,(800,600))
         
