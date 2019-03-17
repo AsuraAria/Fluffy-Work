@@ -118,6 +118,7 @@ liste_key = pygame.key.get_pressed()
 pygame.mixer.music.load("musique/bruitages/vent ou mer.wav")
 son_trappe = pygame.mixer.Sound("musique/bruitages/plaque pression fenetre.wav")
 son_dial = pygame.mixer.Sound("musique/bruitages/clickparole.wav")
+son_porte = pygame.mixer.Sound("musique/bruitages/porte.wav")
 son_dico = pygame.mixer.Sound("musique/bruitages/clickparole1.wav")
 son_victory = pygame.mixer.Sound("musique/bruitages/victoire.wav")
 
@@ -239,9 +240,14 @@ def isBot():
     global W
     global H
 
-    for i in range(len(bots)):
-        if (sqrt((-mapsPos[currentMap][0]+W/2-botsPos[i][1])**2+(-mapsPos[currentMap][1]+H/2-botsPos[i][2])**2) <= 150):
-            return botsPos[i][0]
+    if (currentMap == 0):
+        for i in range(3):
+            if (sqrt((-mapsPos[currentMap][0]+W/2-botsPos[i][1])**2+(-mapsPos[currentMap][1]+H/2-botsPos[i][2])**2) <= 150):
+                return botsPos[i][0]
+    elif (currentMap == 1):
+        for i in range(3,5):
+            if (sqrt((-mapsPos[currentMap][0]+W/2-botsPos[i][1])**2+(-mapsPos[currentMap][1]+H/2-botsPos[i][2])**2) <= 150):
+                return botsPos[i][0]
     
     return -1
     #if (side == 0):
@@ -254,13 +260,17 @@ def evaluateDoor():
     
     isInteracting = False
     
+    
     if (nearBot == 2):
         currentMap = 1
         mapsPos[currentMap][0] = -144
         mapsPos[currentMap][1] = -445
+        son_porte.play()
     if (nearBot == 4 and switch1):
+        son_porte.play()
         currentMap = 2
         resetVictorySound = True
+        dico.append(["Allez"])
 
 #=========================
 # While
