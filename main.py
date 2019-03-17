@@ -201,16 +201,17 @@ while continuer:
         if event.type == KEYDOWN:
             k = event.key
 
-            if (k == 115):#&(last_key!=115):#touche s
+            if (k == 115)&(last_key!=115):#touche s
                 positiondict=min(n-1,positiondict+1)
-            elif (k == 119):#&(last_key!=119):
+            elif (k == 119)&(last_key!=119):
                 positiondict = (max(0,positiondict-1))
-            #last_key = k.event.key
+            last_key = k
             
         if event.type == KEYUP:
             k = event.key
+            last_key = 0
             
-            
+         #last_key = k  
             
         frame.blit(str_dicodex, (400, 55))
         for i in range(0,lonfinal):
