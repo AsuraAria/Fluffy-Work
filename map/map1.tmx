@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="left-up" width="11" height="7" tilewidth="50" tileheight="50" infinite="0" nextlayerid="2" nextobjectid="1">
+ <tileset firstgid="1" source="tileset.tsx"/>
+ <layer id="1" name="Calque de Tile 1" width="11" height="7">
+  <data encoding="csv">
+46,46,46,46,46,48,46,46,46,46,46,
+46,54,54,54,55,54,54,54,54,54,46,
+46,54,54,54,54,54,54,54,54,54,46,
+46,54,54,54,54,54,54,54,55,54,46,
+46,54,54,54,54,54,54,54,54,54,46,
+46,54,54,54,54,54,54,54,54,54,46,
+46,46,46,46,46,46,46,46,46,46,46
+</data>
+ </layer>
+</map>

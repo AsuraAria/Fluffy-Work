@@ -34,14 +34,21 @@ mapsPos = []
 mapsCollision = []
 pxarray = []
 
-for i in range(1):
-    maps.append(pygame.image.load("map/map0.png").convert())
-    maps[i] = pygame.transform.scale(maps[i],(3000,3000))
+for i in range(2):
+    maps.append(pygame.image.load("map/map"+str(i)+".png").convert())
+    if (i==0):
+        maps[i] = pygame.transform.scale(maps[i],(3000,3000))
+    else:
+        maps[i] = pygame.transform.scale(maps[i],(1650,1050))
+    
     mapsPos.append(maps[i].get_rect())
     mapsPos[i] = mapsPos[i].move(-290,-1560)
     
-    mapsCollision.append(pygame.image.load("map/map0Mask.png").convert())
-    mapsCollision[i] = pygame.transform.scale(mapsCollision[i],(3000,3000))
+    mapsCollision.append(pygame.image.load("map/map"+str(i)+"Mask.png").convert())
+    if (i==0):
+        mapsCollision[i] = pygame.transform.scale(mapsCollision[i],(3000,3000))
+    else:
+        mapsCollision[i] = pygame.transform.scale(mapsCollision[i],(1650,1050))
     
     pxarray.append(pygame.PixelArray(mapsCollision[i].copy()))
 
@@ -55,7 +62,7 @@ for i in range(4):
     player[1][i] = pygame.transform.scale(player[1][i],(70,70))
 #frame.blit(perso, (200,300))
 
-botsPos = [[0,792.0, 1180, "?!#*&@"],[1,1794.0, 432.0, "?!#*&@"],[3,2586.0, 250.0,"door"]]
+botsPos = [[0,792.0, 1180, "?!#*&@"],[1,1794.0, 432.0, "?!#*&@"],[2,2586.0, 250.0,"door"],[3,740.0, 450.0,"sign"],[4,790.0, 90.0,"door"]]
 botsDiag = [["Fluffy : Hi, my name is Fluffy and I was hired",
              "in the archeologic team here. I am here to",
              "help with the new language you discovered.",
@@ -71,12 +78,15 @@ botsDiag = [["Fluffy : Hi, my name is Fluffy and I was hired",
              "them before you go.",
              "Go East to the temple, I'll come to see you",
              "later. Good luck !",
-             ""]]
+             ""],[],["Allez sur la pierre à côté de la porte","",""]]
             
 bots = []
-for i in range(3):
+for i in range(5):
     bots.append(pygame.image.load("bots/bot"+str(i)+".png").convert_alpha())
-    bots[i] = pygame.transform.scale(bots[i],(70,70))
+    if (i==3):
+        bots[i] = pygame.transform.scale(bots[i],(140,140))
+    else:
+        bots[i] = pygame.transform.scale(bots[i],(70,70))
 
 keyTuto = [0,0,0,0]
 dicodecFound = False
@@ -136,7 +146,6 @@ gabriolaFont = pygame.font.SysFont("gabriola", 54)
 constantiaFont = pygame.font.SysFont("constantia", 54)
 
 # Scene 1
-
 #=========================
 # Fonctions
 #=========================
@@ -190,9 +199,18 @@ def isBot():
 
 def evaluateDoor():
     global nearBot
+    global currentMap
+    global mapsPos
+    global isInteracting
+    
+    isInteracting = False
     
     if (nearBot == 2):
-        currentMap = 1;
+        currentMap = 1
+        mapsPos[currentMap][0] = -144
+        mapsPos[currentMap][1] = -445
+    if (nearBot == 4):
+        currentMap = 2
         
 
 #=========================
@@ -206,6 +224,8 @@ def evaluateDoor():
 #BOUCLE INFINIE
 continuer = 1
 while continuer:
+    #print(mapsPos[currentMap])
+    
     for event in pygame.event.get():
         if event.type==QUIT:
             loop=0
@@ -213,8 +233,6 @@ while continuer:
         if event.type == KEYDOWN:
             k = event.key
             #print(event.key);
-
-            #Debug
             
             if (k == 13):
                 speed = -20
@@ -281,8 +299,12 @@ while continuer:
         print((-mapsPos[currentMap][0]+W/2,-mapsPos[currentMap][1]+H/2))
         
         #Bots
-        for i in range(len(bots)):
-            frame.blit(bots[i],(botsPos[i][1]+mapsPos[currentMap][0],botsPos[i][2]+mapsPos[currentMap][1]))
+        if (currentMap == 0):
+            for i in range(3):
+                frame.blit(bots[i],(botsPos[i][1]+mapsPos[currentMap][0],botsPos[i][2]+mapsPos[currentMap][1]))
+        elif (currentMap == 1):
+            for i in range(3,5):
+                frame.blit(bots[i],(botsPos[i][1]+mapsPos[currentMap][0],botsPos[i][2]+mapsPos[currentMap][1]))
             
         if (direction[1] == 1 and not isInteracting):
             frame.blit(player[int(sprite/(spriteCount/2))][1], (W/2,H/2))
@@ -321,7 +343,7 @@ while continuer:
                        dicodecFound = True
                 sprite = 0
             else:
-                evaluteDoor()
+                evaluateDoor()
         
     # UPDATE
     
