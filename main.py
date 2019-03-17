@@ -53,7 +53,7 @@ for i in range(4):
 
 # init
 pygame.key.set_repeat(1, 30)
-liste_key = pygame.key.get_pressed()
+last_key = 0
 
 #=========================
 # Variables
@@ -66,9 +66,9 @@ H = 720
 
 # Var Fct
 
-menu = 2 #on est dans un menus
+menu = 3 #on est dans un menus
 positiondict =0 #on commence au debut du dictionnaire
-myfont = pygame.font.SysFont("comicsansms", 40)#pour ecrire le dictionnaire
+myfont = pygame.font.SysFont("constantia", 40)#pour ecrire le dictionnaire
 # Var Map
 
 mapPos = [0,0];
@@ -198,11 +198,20 @@ while continuer:
         i=0
         str_dicodex = myfont.render("Mon DICODEX", 1, (0,0,0))
         
-        if event.type == KEYDOWN:# & last_event != KEYDOWN:
-            positiondict=min(n,positiondict+1)
-        if event.type == KEYUP:# & last_event != KEYUP:
-            positiondict=max(0,positiondict-1)
-        
+        if event.type == KEYDOWN:
+            k = event.key
+
+            if (k == 115):#&(last_key!=115):#touche s
+                positiondict=min(n-1,positiondict+1)
+            elif (k == 119):#&(last_key!=119):
+                positiondict = (max(0,positiondict-1))
+            #last_key = k.event.key
+            
+        if event.type == KEYUP:
+            k = event.key
+            
+            
+            
         frame.blit(str_dicodex, (400, 55))
         for i in range(0,lonfinal):
             mot = myfont.render(noms[i][0], 1, (0,0,0))
