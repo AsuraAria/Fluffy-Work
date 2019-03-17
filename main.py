@@ -103,6 +103,8 @@ box = pygame.image.load("textures/box.png").convert_alpha()
 box = pygame.transform.scale(box,(1200,250))
 isInteracting = False;
 
+#heart = pygame.image.load("").convert()
+
 # init
 pygame.key.set_repeat(1, 30)
 liste_key = pygame.key.get_pressed()
@@ -110,6 +112,7 @@ liste_key = pygame.key.get_pressed()
 pygame.mixer.music.load("musique/fluffy_work_principal.wav")
 son_trappe = pygame.mixer.Sound("musique/bruitages/plaque pression fenetre.wav")
 son_dial = pygame.mixer.Sound("musique/bruitages/clickparole.wav")
+son_dico = pygame.mixer.Sound("musique/bruitages/clickparole1.wav")
 son_victory = pygame.mixer.Sound("musique/bruitages/victoire.wav")
 
 # DICO
@@ -338,6 +341,7 @@ while continuer:
                     menu = 3
                 elif menu ==3:
                     menu = 2
+                son_dico.play()
                 resetA = False
 
         if event.type == KEYUP:
