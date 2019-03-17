@@ -43,7 +43,7 @@ mapsPos = []
 mapsCollision = []
 pxarray = []
 
-for i in range(3):
+for i in range(5):
     maps.append(pygame.image.load("map/map"+str(i)+".png").convert())
     if (i==0):
         maps[i] = pygame.transform.scale(maps[i],(3000,3000))
@@ -73,7 +73,9 @@ for i in range(4):
 
 botsPos = [[0,792.0, 1180, "?!#*&@"],[1,1794.0, 180.0, "?!#*&@"],[2,2586.0, 250.0,"door"],
             [3,750.0, 450.0,"sign"],[4,790.0, 90.0,"door"],
-            [5,600.0, 550.0, "statue"],[2,2586.0, 250.0,"door"]]
+            [5,600.0, 550.0, "statue"],[6,790.0, 90.0,"door"],
+            [7,900.0, 600.0,"sign"],[8,790.0, 90.0,"door"],
+            [9,600.0, 600.0,"sign"]]
     
 botsDiag = [["Fluffy : Hi, my name is Fluffy and I was hired",
              "in the archeologic team here. I am here to",
@@ -96,12 +98,16 @@ botsDiag = [["Fluffy : Hi, my name is Fluffy and I was hired",
              ["Statue : To over pass me, you have to say the",
               "opposite of : 'sous'","",
               "Fluffy : (choose the anwser with WASD key)",
-              "W - Sous    A - Sur   S - A coté","D - Porte"],[]]
+              "W - Sous    A - Sur   S - A coté","D - Porte"],[],
+              
+              ["NE PAS ALLER SUR L'EAU","",""],[],
+              
+              ["/!\\ Ruines en construction /!\\","Revenez plus tard",""]]
             
 bots = []
-for i in range(7):
+for i in range(10):
     bots.append(pygame.image.load("bots/bot"+str(i)+".png").convert_alpha())
-    if (i==3):
+    if (i==3 or i==7 or i==9):
         bots[i] = pygame.transform.scale(bots[i],(140,140))
     elif (i==5):
         bots[i] = pygame.transform.scale(bots[i],(140,280))
@@ -142,7 +148,7 @@ son_victory = pygame.mixer.Sound("musique/bruitages/victoire.wav")
 
 fond_dico = pygame.image.load("textures/fond_dicodec.png").convert_alpha()
 
-dico = [["Pierre","Rock"],["Sur","Above"],["Sous","Under"],["A coté","Next to"]]
+dico = [["Pierre","Noun : Rock"],["Sur","Noun : Above"],["Sous","Noun : Under"],["A coté","Noun : Next to"]]
 positiondict = 0
 n = 0;
 #=========================
@@ -221,6 +227,8 @@ def isColliding(side):
     global pxarray
     global resetVictorySound
     global switch1
+    global HP
+    global menu
 
     wallDetected = False
 
@@ -254,6 +262,9 @@ def isColliding(side):
             son_victory.play()
     if (pygame.Color(pxarray[currentMap][center[0]][center[1]]) == (0, 250, 0, 0)):
         son_trappe.play()
+    if (pygame.Color(pxarray[currentMap][center[0]][center[1]]) == (0, 0, 255, 0)):
+        menu = 0;
+        currentMap = 0;
 
     return wallDetected
 
@@ -276,6 +287,14 @@ def isBot():
                 return botsPos[i][0]
     elif (currentMap == 2):
         for i in range(5,7):
+            if (sqrt((-mapsPos[currentMap][0]+W/2-botsPos[i][1])**2+(-mapsPos[currentMap][1]+H/2-botsPos[i][2])**2) <= 150):
+                return botsPos[i][0]
+    elif (currentMap == 3):
+        for i in range(7,9):
+            if (sqrt((-mapsPos[currentMap][0]+W/2-botsPos[i][1])**2+(-mapsPos[currentMap][1]+H/2-botsPos[i][2])**2) <= 150):
+                return botsPos[i][0]
+    elif (currentMap == 4):
+        for i in range(9,10):
             if (sqrt((-mapsPos[currentMap][0]+W/2-botsPos[i][1])**2+(-mapsPos[currentMap][1]+H/2-botsPos[i][2])**2) <= 150):
                 return botsPos[i][0]
     
@@ -302,26 +321,50 @@ def evaluateDoor():
         mapsPos[currentMap][0] = -144
         mapsPos[currentMap][1] = -445
         resetVictorySound = True
-        dico.append(["Aller","Verbe 'To go'"])
+        dico.append(["Aller","Verb : To go"])
+        dico.append(["Porte","Noun : Door"])
     if (nearBot == 6 and switch2):
         son_porte.play()
         currentMap = 3
         resetVictorySound = True
-        #dico.append(["Allez"])
+        mapsPos[currentMap][0] = -144
+        mapsPos[currentMap][1] = -445
+        dico.append(["Eau","Noun : Water"])
+    if (nearBot == 8):
+        son_porte.play()
+        currentMap = 4
+        son_victory.play()
+        resetVictorySound = True
+        mapsPos[currentMap][0] = -144
+        mapsPos[currentMap][1] = -445
+        dico.append(["Ne pas","Negation : Do not"])
 
 def evaluateAnwser():
     global currentMap
     global answering
     global nearBot
     global HP
+    global isInteracting
+    global whichDiag
+    global menu
+    global switch2
     
     if (nearBot == 5):
         if (choice != -1):
             if (choice == 1):
                 answering = False
                 switch2 = True
+                isInteracting = False;
+                whichDiag = 0
+                son_victory.play()
+                resetVictorySound = True
             else:
                 HP-= 1;
+                if (HP == 0):
+                    menu = 0
+                    HP = 3
+                    currentMap = 0;
+                
     print(HP)
     
 
@@ -384,22 +427,22 @@ while continuer:
             # zqsd : 97 119 100 115
             if (k == 97):
                 direction[0] = 1;
-                choice = 0
+                choice = 1
             elif (k == 119):
                 direction[1] = 1;
                 if (menu == 3 and resetH):
                     positiondict = (max(0,positiondict-1))
                     resetH = False
-                choice = 1
+                choice = 0
             elif (k == 100):
                 direction[2] = 1;
-                choice = 2
+                choice = 3
             elif (k == 115):
                 direction[3] = 1;
                 if (menu == 3 and resetB):
                     positiondict=min(n-1,positiondict+1)
                     resetB = False
-                choice = 3
+                choice = 2
             
             if (k == 101 and nearBot != -1 and resetE):
                 if (isInteracting):
@@ -408,6 +451,7 @@ while continuer:
                     son_dial.play()
                 resetE = False
                 isInteracting = True
+                choice = -1
             if (k == 113 and resetA and dicodecFound):
                 if menu == 2:
                     menu = 3
@@ -415,6 +459,7 @@ while continuer:
                     menu = 2
                 son_dico.play()
                 resetA = False
+                choice = -1
 
         if event.type == KEYUP:
             k = event.key
@@ -479,7 +524,7 @@ while continuer:
         
         frame.blit(fond, (0,0))
         frame.blit(maps[currentMap], mapsPos[currentMap])
-        #print((-mapsPos[currentMap][0]+W/2,-mapsPos[currentMap][1]+H/2))
+        print((-mapsPos[currentMap][0]+W/2,-mapsPos[currentMap][1]+H/2))
         
         #Bots
         if (currentMap == 0):
@@ -494,6 +539,12 @@ while continuer:
                     frame.blit(bots[i],(botsPos[i][1]+mapsPos[currentMap][0],botsPos[i][2]+mapsPos[currentMap][1]-150))
                 else:
                     frame.blit(bots[i],(botsPos[i][1]+mapsPos[currentMap][0],botsPos[i][2]+mapsPos[currentMap][1]))
+        elif(currentMap == 3):
+            for i in range(7,9):
+                frame.blit(bots[i],(botsPos[i][1]+mapsPos[currentMap][0],botsPos[i][2]+mapsPos[currentMap][1]))
+        elif(currentMap == 4):
+            for i in range(9,10):
+                frame.blit(bots[i],(botsPos[i][1]+mapsPos[currentMap][0],botsPos[i][2]+mapsPos[currentMap][1]))
             
         if (direction[1] == 1 and not isInteracting):
             frame.blit(player[int(sprite/(spriteCount/2))][1], (W/2,H/2))
@@ -517,7 +568,7 @@ while continuer:
             frame.blit(heart,(i*70,0))
         
         if (isInteracting):
-            #print(nearBot)
+            print(nearBot)
             if (botsPos[nearBot][3] != "door"):
                 frame.blit(box,(40,H-250-20))
                 if (whichDiag <= len(botsDiag[nearBot])-1):
@@ -527,8 +578,10 @@ while continuer:
                     frame.blit(text1,(110,H-250+20))
                     frame.blit(text2,(110,H-250+80))
                     frame.blit(text3,(110,H-250+140))
+                    if (botsPos[nearBot][3] != "statue" and whichDiag == len(botsDiag[nearBot])-1):
+                        whichDiag+=3;
                 else:
-                    if (botsPos[nearBot][3] == "statue"):
+                    if (botsPos[nearBot][3] == "statue" and not answering):
                         answering = True
                         
                     if (answering):
