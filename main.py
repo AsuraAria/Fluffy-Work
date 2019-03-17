@@ -52,9 +52,15 @@ for i in range(4):
 botsPos = [[0,792.0, 1180, "?!#*&@"]]
 
 bots = []
-for i in range(2):
+for i in range(1):
     bots.append(pygame.image.load("bots/bot"+str(i)+".png").convert_alpha())
-    bots[i] = pygame.transform.scale(player[1][i],(70,70))
+    bots[i] = pygame.transform.scale(bots[i],(70,70))
+
+keyTuto = [0,0,0,0]
+tuto = []
+for i in range(2):
+    tuto.append(pygame.image.load("textures/tuto"+str(i)+".png").convert_alpha())
+    tuto[i] = pygame.transform.scale(tuto[i],(420,120))
 
 # init
 pygame.key.set_repeat(1, 30)
@@ -87,6 +93,10 @@ sprite = 0;
 
 direction = [0,0,0,0]
 finalDir = 0;
+
+# Font
+
+#myfont = pygame.font.SysFont("monospace", 20)
 
 # Scene 1
 
@@ -190,38 +200,48 @@ while continuer:
             if (direction[0] == 1 and not isColliding(0) and -mapsPos[0]+W/2>=0):
                 finalDir = 0
                 mapsPos = mapsPos.move(-speed, 0);
+                keyTuto[0] = 1
             if (direction[1] == 1 and not isColliding(1) and -mapsPos[1]+H/2>=0):
                 finalDir = 1
                 mapsPos = mapsPos.move(0, -speed);
+                keyTuto[1] = 1
             if (direction[2] == 1 and not isColliding(2) and -mapsPos[0]+W/2<=3000):
                 finalDir = 2
                 mapsPos = mapsPos.move(speed, 0);
+                keyTuto[2] = 1
             if (direction[3] == 1 and not isColliding(3) and -mapsPos[1]+H/2<=3000):
                 finalDir = 3
                 mapsPos = mapsPos.move(0, speed);
+                keyTuto[3] = 1
         else:
             sprite = 0
-
+        
         #if (menu == 0):
         frame.blit(fond, (0,0))
         frame.blit(maps, mapsPos)
-
-        nearBot = isBot()
-        
-        if (nearBot != -1):
-            
-        
         #print((-mapsPos[0]+W/2,-mapsPos[1]+H/2))
-
+        
         #Bots
         for i in range(len(bots)):
-            frame.blit(player[0][3],(botsPos[i][1]+mapsPos[0],botsPos[i][2]+mapsPos[1]))
+            frame.blit(bots[0],(botsPos[i][1]+mapsPos[0],botsPos[i][2]+mapsPos[1]))
+            
         if (direction[1] == 1):
             frame.blit(player[int(sprite/(spriteCount/2))][1], (W/2,H/2))
         elif (direction[3] == 1):
             frame.blit(player[int(sprite/(spriteCount/2))][3], (W/2,H/2))
         else:
             frame.blit(player[int(sprite/(spriteCount/2))][finalDir], (W/2,H/2))
-
+            
+        nearBot = isBot()
+        
+        if (nearBot != -1):
+            keyTuto = [1,1,1,1]
+            frame.blit(tuto[1],(W/2+100,H/2-100))
+        
+        if (keyTuto != [1,1,1,1]):
+            frame.blit(tuto[0],(W/2+100,H/2-100))
+        
+    # UPDATE
+    
     pygame.display.flip()
     pygame.time.delay(10)
