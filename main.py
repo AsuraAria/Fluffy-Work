@@ -12,6 +12,7 @@ Created on Sat Mar 16 15:50:56 2019
 
 import pygame
 from pygame.locals import *
+from math import *
 
 #import varglobal
 
@@ -28,11 +29,12 @@ frameSize = pygame.display.get_surface().get_size()
 fond = pygame.image.load("map/fond.png").convert()
 
 #Chargement de la map
-maps = pygame.image.load("map/map2.png").convert()
+maps = pygame.image.load("map/map0.png").convert()
 maps = pygame.transform.scale(maps,(3000,3000))
 mapsPos = maps.get_rect()
+mapsPos = mapsPos.move(-290,-1560)
 
-mapsCollision = pygame.image.load("map/map2Mask.png").convert()
+mapsCollision = pygame.image.load("map/map0Mask.png").convert()
 mapsCollision = pygame.transform.scale(mapsCollision,(3000,3000))
 pxarray = []
 pxarray = pygame.PixelArray(mapsCollision.copy()) #248 177 33
@@ -46,6 +48,13 @@ for i in range(4):
     player[1].append(pygame.image.load("player/fluffitten"+str(i)+".1.png").convert_alpha())
     player[1][i] = pygame.transform.scale(player[1][i],(70,70))
 #frame.blit(perso, (200,300))
+
+botsPos = [[0,792.0, 1180, "?!#*&@"]]
+            
+bots = []
+for i in range(1):
+    bots.append(pygame.image.load("player/fluffitten"+str(i)+".1.png").convert_alpha())
+    bots[i] = pygame.transform.scale(player[1][i],(70,70))
 
 # init
 pygame.key.set_repeat(1, 30)
@@ -63,10 +72,7 @@ H = frameSize[1]
 # Var Fct
 
 menu = 0 #on est pas dans un menus
-
-# Var Map
-
-mapPos = [0,0];
+nearBot = -1;
 
 # Var Player
 
@@ -76,6 +82,9 @@ sprite = 0;
 
 direction = [0,0,0,0]
 finalDir = 0;
+
+# Scene 1
+
 
 #=========================
 # Fonctions
@@ -88,8 +97,8 @@ def isColliding(side):
 
     wallDetected = False
 
-    upL = (int(W/2-mapsPos[0]),int(H/2-mapsPos[1]))
-    upR = (int(W/2-mapsPos[0]+70), int(H/2-mapsPos[1]))
+    upL = (int(W/2-mapsPos[0]),int(H/2-mapsPos[1]+40))
+    upR = (int(W/2-mapsPos[0]+70), int(H/2-mapsPos[1]+40))
     doL = (int(W/2-mapsPos[0]), int(H/2-mapsPos[1]+70))
     doR = (int(W/2-mapsPos[0]+70), int(H/2-mapsPos[1]+70))
 
@@ -107,9 +116,26 @@ def isColliding(side):
     if (side == 3):
         if (pygame.Color(pxarray[doL[0]][doL[1]+5]) == (0, 248, 177, 33) or pygame.Color(pxarray[doR[0]][doR[1]+5]) == (0, 248, 177, 33)):
             return True;
-
+        
     return wallDetected
 
+def isBot():
+    global mapsPos
+    global pxarray
+    global bots
+    global botsPos
+    global W
+    global H
+    
+    botDetected = False
+    
+    print("TESSSSST "+str(sqrt((-mapsPos[0]+W/2+35)**2+(-mapsPos[1]+H/2+35)**2)))
+    for i in range(len(bots)):
+        if (sqrt((-mapsPos[0]+W/2-botsPos[i][1])**2+(-mapsPos[1]+H/2-botsPos[i][2])**2) <= 150):
+            print(i)
+    #if (side == 0):
+        
+    
 #=========================
 # While
 #=========================
@@ -117,9 +143,6 @@ def isColliding(side):
 #frame.blit(maps, mapPos)
 
 #pygame.display.flip()
-
-
-
 
 #BOUCLE INFINIE
 continuer = 1
@@ -158,32 +181,38 @@ while continuer:
     if (menu == 0):
         if (direction[0]==1 or direction[1]==1 or direction[2]==1 or direction[3]==1):
             sprite = (sprite+1)%spriteCount
-            if (direction[0] == 1 and not isColliding(0)):
+            if (direction[0] == 1 and not isColliding(0) and -mapsPos[0]+W/2>=0):
                 finalDir = 0
                 mapsPos = mapsPos.move(-speed, 0);
-            if (direction[1] == 1 and not isColliding(1)):
+            if (direction[1] == 1 and not isColliding(1) and -mapsPos[1]+H/2>=0):
                 finalDir = 1
                 mapsPos = mapsPos.move(0, -speed);
-            if (direction[2] == 1 and not isColliding(2)):
+            if (direction[2] == 1 and not isColliding(2) and -mapsPos[0]+W/2<=3000):
                 finalDir = 2
                 mapsPos = mapsPos.move(speed, 0);
-            if (direction[3] == 1 and not isColliding(3)):
+            if (direction[3] == 1 and not isColliding(3) and -mapsPos[1]+H/2<=3000):
                 finalDir = 3
                 mapsPos = mapsPos.move(0, speed);
         else:
-            finalDir = 3
             sprite = 0
-    
+        
         #if (menu == 0):
         frame.blit(fond, (0,0))
         frame.blit(maps, mapsPos)
+        
+        isBot()
+        
+        #print((-mapsPos[0]+W/2,-mapsPos[1]+H/2))
+        
+        #Bots
+        for i in range(len(bots)):
+            frame.blit(player[0][3],(botsPos[i][1]+mapsPos[0],botsPos[i][2]+mapsPos[1]))
         if (direction[1] == 1):
             frame.blit(player[int(sprite/(spriteCount/2))][1], (W/2,H/2))
         elif (direction[3] == 1):
             frame.blit(player[int(sprite/(spriteCount/2))][3], (W/2,H/2))
         else:
             frame.blit(player[int(sprite/(spriteCount/2))][finalDir], (W/2,H/2))
-
-
+        
     pygame.display.flip()
     pygame.time.delay(10)
