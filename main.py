@@ -41,6 +41,15 @@ fond_menu_difficulty = pygame.transform.scale(fond_menu_difficulty,(1280, 720))
 
 fond_dico = pygame.image.load("textures_menus/Fond_Pokedex.png").convert()
 fond_dico = pygame.transform.scale(fond_dico,(1280, 720))
+
+#musique
+
+pygame.mixer.music.load("musique/fluffy_work_principal.wav")
+son_trappe = pygame.mixer.Sound("musique/bruitages/plaque pression final.wav")
+
+
+
+
 #Chargement et collage du personnage
 player = [[],[]]
 for i in range(4):
@@ -66,7 +75,7 @@ H = 720
 
 # Var Fct
 
-menu = 2 #on est dans un menus
+menu = 1 #on est dans un menus
 positiondict =0 #on commence au debut du dictionnaire
 myfont = pygame.font.SysFont("comicsansms", 40)#pour ecrire le dictionnaire
 # Var Map
@@ -92,6 +101,7 @@ finalDir = 0;
 #BOUCLE INFINIE
 continuer = 1
 last_event =-1
+pygame.mixer.music.play()
 while continuer:
     for event in pygame.event.get():
         if event.type==QUIT:
@@ -149,7 +159,8 @@ while continuer:
         frame.blit(fond, (0,0))
         frame.blit(maps, mapsPos)
         frame.blit(player[int(sprite/(spriteCount/2))][finalDir], (W/2,H/2))
-    
+
+        
     if menu ==1:#afficher le menu principal
         frame.blit(fond, (0,0))
         frame.blit(fond_menu_principal,(0,0))
@@ -161,9 +172,11 @@ while continuer:
         
         if event.type == MOUSEBUTTONDOWN :
             if (150<event.pos[0])&(event.pos[0]<460)&(280<event.pos[1])&(event.pos[1]<380):
+                son_trappe.play()
                 print("play")
             if (150<event.pos[0])&(event.pos[0]<475)&(460<event.pos[1])&(event.pos[1]<570):
                 print("quit")
+                son_trappe.play()
     #150,280
     #460,380
     #.150,475
