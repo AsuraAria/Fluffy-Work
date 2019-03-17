@@ -35,3 +35,5 @@ Launch main.py to player
 The library pygame has to be installed
 
 The keyboard has to be in an QWERTY configuration
+
+3 levels disponibles
