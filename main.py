@@ -263,7 +263,7 @@ def evaluateDoor():
 
 #pygame.display.flip()
 
-pygame.mixer.music.play(-1)
+#pygame.mixer.music.play(-1)
 
 #BOUCLE INFINIE
 continuer = 1
@@ -304,7 +304,7 @@ while continuer:
         
         if event.type == KEYDOWN:
             k = event.key
-            print(event.key);
+            #print(event.key);
             
             if (k == 13):
                 speed = -20
@@ -393,7 +393,7 @@ while continuer:
         
         frame.blit(fond, (0,0))
         frame.blit(maps[currentMap], mapsPos[currentMap])
-        print((-mapsPos[currentMap][0]+W/2,-mapsPos[currentMap][1]+H/2))
+        #print((-mapsPos[currentMap][0]+W/2,-mapsPos[currentMap][1]+H/2))
         
         #Bots
         if (currentMap == 0):
