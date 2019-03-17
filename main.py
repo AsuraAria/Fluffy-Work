@@ -38,7 +38,7 @@ mapsPos = []
 mapsCollision = []
 pxarray = []
 
-for i in range(2):
+for i in range(3):
     maps.append(pygame.image.load("map/map"+str(i)+".png").convert())
     if (i==0):
         maps[i] = pygame.transform.scale(maps[i],(3000,3000))
@@ -66,7 +66,9 @@ for i in range(4):
     player[1][i] = pygame.transform.scale(player[1][i],(70,70))
 #frame.blit(perso, (200,300))
 
-botsPos = [[0,792.0, 1180, "?!#*&@"],[1,1794.0, 432.0, "?!#*&@"],[2,2586.0, 250.0,"door"],[3,740.0, 450.0,"sign"],[4,790.0, 90.0,"door"]]
+botsPos = [[0,792.0, 1180, "?!#*&@"],[1,1794.0, 180.0, "?!#*&@"],[2,2586.0, 250.0,"door"],
+            [3,740.0, 450.0,"sign"],[4,790.0, 90.0,"door"],[1,1794.0, 180.0, "statue"]]
+    
 botsDiag = [["Fluffy : Hi, my name is Fluffy and I was hired",
              "in the archeologic team here. I am here to",
              "help with the new language you discovered.",
@@ -82,7 +84,9 @@ botsDiag = [["Fluffy : Hi, my name is Fluffy and I was hired",
              "them before you go.",
              "Go East to the temple, I'll come to see you",
              "later. Good luck !",
-             ""],[],["Allez sur la pierre à côté de la porte","",""]]
+             ""],[],["Allez sur la pierre à côté de la porte","",""],[],
+             ["Statue : To over pass me, you have to say the",
+              "opposite of 'sous'",""]]
             
 bots = []
 for i in range(5):
@@ -476,9 +480,9 @@ while continuer:
         noms = dico[positiondict:min(n,positiondict+9)]
         lonfinal = len(noms)
         i=0
-        str_dicodex = gabriolaFontB.render("Mon DICODEX", 1, Black)
+        str_dicodex = gabriolaFontB.render("My DICODEX", 1, Black)
             
-        frame.blit(str_dicodex, (W/2-gabriolaFontB.size("Mon DICODEX")[0]/2, 80))
+        frame.blit(str_dicodex, (W/2-gabriolaFontB.size("My DICODEX")[0]/2, 80))
         for i in range(0,lonfinal):
             mot = gabriolaFont.render(noms[i][0], 1, Black)
             frame.blit(mot, (100, 110+i*60))
