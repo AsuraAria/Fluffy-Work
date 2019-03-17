@@ -86,6 +86,7 @@ finalDir = 0;
 
 #BOUCLE INFINIE
 continuer = 1
+last_event =-1
 while continuer:
     for event in pygame.event.get():
         if event.type==QUIT:
@@ -188,9 +189,9 @@ while continuer:
         i=0
         str_dicodex = myfont.render("Mon DICODEX", 1, (0,0,0))
         
-        if event.type == KEYDOWN:
+        if event.type == KEYDOWN:# & last_event != KEYDOWN:
             positiondict=min(n,positiondict+1)
-        if event.type == KEYUP:
+        if event.type == KEYUP:# & last_event != KEYUP:
             positiondict=max(0,positiondict-1)
         
         frame.blit(str_dicodex, (400, 50))
@@ -204,7 +205,10 @@ while continuer:
         #print(trad)
         affiche_trad = myfont.render(trad, 1, (0,0,0))
         frame.blit(affiche_trad, (500, 200))
-        
+    
+    
+    last_event_type = event.type
+    #event.type=0
     pygame.display.flip()
     pygame.time.delay(10)
                 
