@@ -50,7 +50,7 @@ for i in range(4):
 #frame.blit(perso, (200,300))
 
 botsPos = [[0,792.0, 1180, "?!#*&@"]]
-            
+
 bots = []
 for i in range(1):
     bots.append(pygame.image.load("player/fluffitten"+str(i)+".1.png").convert_alpha())
@@ -73,6 +73,11 @@ H = frameSize[1]
 
 menu = 0 #on est pas dans un menus
 nearBot = -1;
+#=======
+
+# Var Map
+
+mapPos = [0,0];
 
 # Var Player
 
@@ -103,7 +108,7 @@ def isColliding(side):
     doR = (int(W/2-mapsPos[0]+70), int(H/2-mapsPos[1]+70))
 
     #print(pygame.Color(pxarray[doR[0]][doR[1]]))
-    
+
     if (side == 0):
         if (pygame.Color(pxarray[doL[0]-5][doL[1]]) == (0, 248, 177, 33) or pygame.Color(pxarray[upL[0]-5][upL[1]]) == (0, 248, 177, 33)):
             return True
@@ -116,7 +121,7 @@ def isColliding(side):
     if (side == 3):
         if (pygame.Color(pxarray[doL[0]][doL[1]+5]) == (0, 248, 177, 33) or pygame.Color(pxarray[doR[0]][doR[1]+5]) == (0, 248, 177, 33)):
             return True;
-        
+
     return wallDetected
 
 def isBot():
@@ -126,16 +131,17 @@ def isBot():
     global botsPos
     global W
     global H
-    
+
     botDetected = False
-    
-    print("TESSSSST "+str(sqrt((-mapsPos[0]+W/2+35)**2+(-mapsPos[1]+H/2+35)**2)))
+
     for i in range(len(bots)):
         if (sqrt((-mapsPos[0]+W/2-botsPos[i][1])**2+(-mapsPos[1]+H/2-botsPos[i][2])**2) <= 150):
-            print(i)
-    #if (side == 0):
-        
+            return botsPos[i][0]
     
+    return -1
+    #if (side == 0):
+
+
 #=========================
 # While
 #=========================
@@ -195,15 +201,18 @@ while continuer:
                 mapsPos = mapsPos.move(0, speed);
         else:
             sprite = 0
-        
+
         #if (menu == 0):
         frame.blit(fond, (0,0))
         frame.blit(maps, mapsPos)
+
+        nearBot = isBot()
         
-        isBot()
+        if (nearBot != -1):
+            
         
         #print((-mapsPos[0]+W/2,-mapsPos[1]+H/2))
-        
+
         #Bots
         for i in range(len(bots)):
             frame.blit(player[0][3],(botsPos[i][1]+mapsPos[0],botsPos[i][2]+mapsPos[1]))
@@ -213,6 +222,6 @@ while continuer:
             frame.blit(player[int(sprite/(spriteCount/2))][3], (W/2,H/2))
         else:
             frame.blit(player[int(sprite/(spriteCount/2))][finalDir], (W/2,H/2))
-        
+
     pygame.display.flip()
     pygame.time.delay(10)
