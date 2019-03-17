@@ -36,6 +36,9 @@ mapsPos = maps.get_rect()
 fond_menu_principal = pygame.image.load("textures_menus/fond_menu_principal.png").convert()
 fond_menu_principal = pygame.transform.scale(fond_menu_principal,(1280, 720))
 
+
+fond_dico = pygame.image.load("textures_menus/Fond_Pokedex.png").convert()
+fond_dico = pygame.transform.scale(fond_dico,(1280, 720))
 #Chargement et collage du personnage
 player = [[],[]]
 for i in range(4):
@@ -149,8 +152,8 @@ while continuer:
         frame.blit(fond, (0,0))
         frame.blit(fond_menu_principal,(0,0))
         
-        bouton_play = pygame.image.load("textures_menus/bouton_play.png").convert()
-        bouton_quit = pygame.image.load("textures_menus/bouton_quit.png").convert()
+        bouton_play = pygame.image.load("textures_menus/menu_play.png").convert()
+        bouton_quit = pygame.image.load("textures_menus/menu_quit.png").convert()
         frame.blit(bouton_play,(60,600))
         frame.blit(bouton_quit,(900,600))
         
@@ -164,10 +167,10 @@ while continuer:
         frame.blit(fond, (0,0))
         frame.blit(fond_menu_principal,(0,0))
         
-        bouton_easy = pygame.image.load("textures_menus/bouton_easy.png").convert()
-        bouton_hard = pygame.image.load("textures_menus/bouton_hard.png").convert()
+        bouton_easy = pygame.image.load("textures_menus/menu_easy.png").convert()
+        bouton_hard = pygame.image.load("textures_menus/menu_easy.png").convert()
         frame.blit(bouton_easy,(60,600))
-        frame.blit(bouton_hard,(900,600))
+        frame.blit(bouton_hard,(800,600))
         
         if event.type == MOUSEBUTTONDOWN :
             if (60<event.pos[0])&(event.pos[0]<260)&(600<event.pos[1])&(event.pos[1]<660):
@@ -178,7 +181,8 @@ while continuer:
     if menu == 3 : #dicodex
         import dictionnaire
         frame.blit(fond, (0,0))
-        frame.blit(fond_menu_principal,(0,0))
+        fond_dico
+        frame.blit(fond_dico,(0,0))
         #print(dictionnaire.dict)
         #positiondict =0
         n = len(dictionnaire.dict)
@@ -194,17 +198,17 @@ while continuer:
         if event.type == KEYUP:# & last_event != KEYUP:
             positiondict=max(0,positiondict-1)
         
-        frame.blit(str_dicodex, (400, 50))
+        frame.blit(str_dicodex, (400, 55))
         for i in range(0,lonfinal):
             mot = myfont.render(noms[i][0], 1, (0,0,0))
-            frame.blit(mot, (60, 100+i*60))
+            frame.blit(mot, (80, 100+i*60))
         
         trad = dictionnaire.dict[positiondict][1]
         #print(trad)
         #trad = dictionnaire.cherche_fr_ang(trad,dictionnaire.dict)
         #print(trad)
         affiche_trad = myfont.render(trad, 1, (0,0,0))
-        frame.blit(affiche_trad, (500, 200))
+        frame.blit(affiche_trad, (500, 210))
     
     
     last_event_type = event.type
