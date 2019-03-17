@@ -52,8 +52,8 @@ for i in range(4):
 botsPos = [[0,792.0, 1180, "?!#*&@"]]
 
 bots = []
-for i in range(1):
-    bots.append(pygame.image.load("player/fluffitten"+str(i)+".1.png").convert_alpha())
+for i in range(2):
+    bots.append(pygame.image.load("bots/bot"+str(i)+".png").convert_alpha())
     bots[i] = pygame.transform.scale(player[1][i],(70,70))
 
 # init
