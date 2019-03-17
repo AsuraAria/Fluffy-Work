@@ -36,6 +36,7 @@ fond = pygame.image.load("map/fond.png").convert()
 #Chargement du menu
 menu0 = pygame.image.load("textures/menu0.png").convert()
 menu1 = pygame.image.load("textures/menu1.png").convert()
+menu32 = pygame.image.load("textures/menu32.png").convert()
 
 #Chargement de la map
 maps = []
@@ -265,6 +266,9 @@ def isColliding(side):
     if (pygame.Color(pxarray[currentMap][center[0]][center[1]]) == (0, 0, 255, 0)):
         menu = 0;
         currentMap = 0;
+        frame.blit(menu32, (0,0))
+        pygame.display.flip()
+        pygame.time.delay(5000)
 
     return wallDetected
 
@@ -364,6 +368,9 @@ def evaluateAnwser():
                     menu = 0
                     HP = 3
                     currentMap = 0;
+                    frame.blit(menu32, (0,0))
+                    pygame.display.flip()
+                    pygame.time.delay(5000)
                 
     print(HP)
     
