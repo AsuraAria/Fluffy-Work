@@ -39,6 +39,9 @@ menu1 = pygame.image.load("textures/menu1.png").convert()
 menu32 = pygame.image.load("textures/menu32.png").convert()
 
 #Chargement de la map
+
+maps2 =[]
+
 maps = []
 mapsPos = []
 mapsCollision = []
@@ -50,6 +53,13 @@ for i in range(5):
         maps[i] = pygame.transform.scale(maps[i],(3000,3000))
     else:
         maps[i] = pygame.transform.scale(maps[i],(1650,1050))
+    
+    if (i == 0):
+        maps2.append(pygame.image.load("map/map"+str(i)+".1.png").convert())
+        if (i==0):
+            maps2[i] = pygame.transform.scale(maps2[i],(3000,3000))
+        else:
+            maps2[i] = pygame.transform.scale(maps2[i],(1650,1050))
     
     mapsPos.append(maps[i].get_rect())
     mapsPos[i] = mapsPos[i].move(-290,-1560)
@@ -184,6 +194,8 @@ resetMouse = True;
 
 # Var Map
 
+spriteMap = 0;
+spriteMapCount = 40;
 currentMap = 0;
 
 # Var Player
@@ -530,7 +542,18 @@ while continuer:
                 sprite = 0
         
         frame.blit(fond, (0,0))
-        frame.blit(maps[currentMap], mapsPos[currentMap])
+        if (currentMap == 0):
+            if (int(spriteMap/(spriteMapCount/2)) == 0):
+                frame.blit(maps[currentMap], mapsPos[currentMap])
+            else:
+                frame.blit(maps2[currentMap], mapsPos[currentMap])
+                
+            spriteMap += 1
+            if (spriteMap >= spriteMapCount):
+                spriteMap = 0
+        else:
+            frame.blit(maps[currentMap], mapsPos[currentMap])
+        
         print((-mapsPos[currentMap][0]+W/2,-mapsPos[currentMap][1]+H/2))
         
         #Bots
